@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block extra_css %}
+.profile-container {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.profile-header {
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+.profile-info {
+    margin-bottom: 20px;
+}
+.profile-info label {
+    font-weight: 600;
+    color: #495057;
+}
+.profile-info p {
+    margin-bottom: 0;
+    color: #6c757d;
+}
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary">Profile Information</h2>
+    <a href="{{ url_for('dashboard.index') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <h3>{{ user.full_name }}</h3>
+        <p class="text-muted">{{ user.email }}</p>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="profile-info">
+                <label>WhatsApp Number</label>
+                <p>{{ user.whatsapp_number }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="profile-info">
+                <label>Business Name</label>
+                <p>{{ user.business_name }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="profile-info">
+                <label>Account Type</label>
+                <p>
+                    {% if user.is_admin %}
+                    <span class="badge badge-success">Admin</span>
+                    {% else %}
+                    <span class="badge badge-primary">User</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="profile-info">
+                <label>Member Since</label>
+                <p>{{ user.created_at.strftime('%B %d, %Y') }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

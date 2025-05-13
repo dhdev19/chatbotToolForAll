@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Q&A{% endblock %}
+
+{% block extra_css %}
+.form-container {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.form-group label {
+    font-weight: 500;
+    color: #495057;
+}
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary">Edit Q&A</h2>
+    <a href="{{ url_for('chatbot.view_qa') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Q&A List
+    </a>
+</div>
+
+<div class="form-container">
+    <form method="POST" action="{{ url_for('chatbot.edit_qa', qa_id=qa.id) }}">
+        <div class="form-group">
+            <label for="question">Question</label>
+            <input type="text" class="form-control" id="question" name="question" value="{{ qa.question }}" required>
+        </div>
+        <div class="form-group">
+            <label for="answer">Answer</label>
+            <textarea class="form-control" id="answer" name="answer" rows="4" required>{{ qa.answer }}</textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Update Q&A</button>
+            <a href="{{ url_for('chatbot.view_qa') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %} 
