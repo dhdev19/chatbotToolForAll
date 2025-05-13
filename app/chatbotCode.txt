@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
     userInput.value = "";
 
     try {
-      const res = await fetch("https://chatbot-embed-jotx.onrender.com/chat", {
+      const res = await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: message, user_id: userId })  // Sending user_id along with message
