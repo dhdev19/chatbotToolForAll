@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 # MySQL connection configuration
 db_config = {
     'host': os.getenv('HOST'),
-    'port': os.getenv('PORT'),
+    'port': os.getenv('DB_PORT'),
     'user': os.getenv('USER'),
     'password': os.getenv('PASSWORD'),
     'database': os.getenv('DATABASE')
