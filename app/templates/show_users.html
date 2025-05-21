@@ -50,6 +50,7 @@
                     <th>Business Name</th>
                     <th>Admin Status</th>
                     <th>Created At</th>
+                    <th>Welcome Message</th>
                     <th>Code Snippet</th>
                 </tr>
             </thead>
@@ -69,6 +70,7 @@
                         {% endif %}
                     </td>
                     <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ user.WelcomeMessage }}</td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary" onclick="copyCode{{ user.id }}()">Copy Code</button>
                         <textarea id="code-snippet-{{ user.id }}" style="display:none;">
