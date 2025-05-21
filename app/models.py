@@ -17,7 +17,7 @@ def get_db_connection():
     return mysql.connector.connect(**db_config)
 
 class User:
-    def __init__(self, full_name, email, password_hash, whatsapp_number, business_name, secret_key=None, is_admin=False):
+    def __init__(self, full_name, email, password_hash, whatsapp_number, business_name, WelcomeMessage, secret_key=None, is_admin=False):
         self.full_name = full_name
         self.email = email
         self.password_hash = password_hash
@@ -25,6 +25,7 @@ class User:
         self.business_name = business_name
         self.secret_key = secret_key or str(uuid.uuid4())
         self.is_admin = is_admin
+        self.WelcomeMessage = WelcomeMessage
         self.created_at = datetime.utcnow()
 
     @staticmethod
@@ -40,6 +41,7 @@ class User:
                 whatsapp_number VARCHAR(20),
                 business_name VARCHAR(100),
                 secret_key VARCHAR(64) UNIQUE,
+                WelcomeMessage TEXT,
                 is_admin BOOLEAN DEFAULT FALSE,
                 created_at DATETIME
             )
@@ -52,9 +54,9 @@ class User:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO users (full_name, email, password_hash, whatsapp_number, business_name, secret_key, is_admin, created_at)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-        ''', (self.full_name, self.email, self.password_hash, self.whatsapp_number, self.business_name, self.secret_key, self.is_admin, self.created_at))
+            INSERT INTO users (full_name, email, password_hash, whatsapp_number, business_name, WelcomeMessage, secret_key, is_admin, created_at)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ''', (self.full_name, self.email, self.password_hash, self.whatsapp_number, self.business_name, self.WelcomeMessage, self.secret_key, self.is_admin, self.created_at))
         conn.commit()
         cursor.close()
         conn.close()
