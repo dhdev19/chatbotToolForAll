@@ -27,6 +27,7 @@ def add_user():
         password = request.form.get('password')
         whatsapp_number = request.form.get('whatsapp_number')
         business_name = request.form.get('business_name')
+        WelcomeMessage = request.form.get('WelcomeMessage')
         password_hash = hashlib.sha256(password.encode()).hexdigest()
         new_user = User(full_name, email, password_hash, whatsapp_number, business_name)
         new_user.save()
