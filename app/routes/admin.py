@@ -29,7 +29,7 @@ def add_user():
         business_name = request.form.get('business_name')
         WelcomeMessage = request.form.get('WelcomeMessage')
         password_hash = hashlib.sha256(password.encode()).hexdigest()
-        new_user = User(full_name, email, password_hash, whatsapp_number,WelcomeMessage=WelcomeMessage, business_name)
+        new_user = User(full_name, email, password_hash, whatsapp_number, business_name, WelcomeMessage)
         new_user.save()
         flash('User added successfully')
         return redirect(url_for('admin.dashboard'))
