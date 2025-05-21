@@ -74,6 +74,7 @@
                     <td>
                         <button class="btn btn-sm btn-outline-primary" onclick="copyCode{{ user.id }}()">Copy Code</button>
                         <textarea id="code-snippet-{{ user.id }}" style="display:none;">
+
 <style>
 #chat-widget {
   position: fixed;
@@ -157,9 +158,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const chatMessages = document.getElementById("chat-messages");
 
   const userId = "{{ user.id }}";
+  const welcomeMessage = {{ user.WelcomeMessage | tojson }};
+  let welcomeShown = false;
 
   chatToggle.addEventListener("click", function () {
-    chatWidget.style.display = (chatWidget.style.display === "none" || chatWidget.style.display === "") ? "flex" : "none";
+    const isHidden = chatWidget.style.display === "none" || chatWidget.style.display === "";
+    chatWidget.style.display = isHidden ? "flex" : "none";
+
+    if (isHidden && !welcomeShown && welcomeMessage) {
+      appendMessage("Bot", welcomeMessage);
+      welcomeShown = true;
+    }
   });
 
   sendBtn.addEventListener("click", sendMessage);
