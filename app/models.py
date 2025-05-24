@@ -91,27 +91,27 @@ class User:
         conn.close()
 
     @staticmethod
-def get_by_id(user_id):
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
-    row = cursor.fetchone()
-    cursor.close()
-    conn.close()
-    if row:
-        return User(
-            id=row['id'],
-            full_name=row['full_name'],
-            email=row['email'],
-            password_hash=row['password_hash'],
-            whatsapp_number=row['whatsapp_number'],
-            business_name=row['business_name'],
-            WelcomeMessage=row['WelcomeMessage'],
-            secret_key=row['secret_key'],
-            is_admin=row['is_admin'],
-            created_at=row['created_at']
-        )
-    return None
+    def get_by_id(user_id):
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+        row = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        if row:
+            return User(
+                id=row['id'],
+                full_name=row['full_name'],
+                email=row['email'],
+                password_hash=row['password_hash'],
+                whatsapp_number=row['whatsapp_number'],
+                business_name=row['business_name'],
+                WelcomeMessage=row['WelcomeMessage'],
+                secret_key=row['secret_key'],
+                is_admin=row['is_admin'],
+                created_at=row['created_at']
+            )
+        return None
     # @staticmethod
     # def get_by_id(user_id):
     #     conn = get_db_connection()
