@@ -268,17 +268,25 @@ document.addEventListener("DOMContentLoaded", function () {
   }, 10000);
 
   chatToggle.addEventListener("click", function () {
-    const isHidden = chatWidget.style.display === "none" || chatWidget.style.display === "";
-    chatWidget.style.display = isHidden ? "flex" : "none";
+  const isHidden = chatWidget.style.display === "none" || chatWidget.style.display === "";
+  chatWidget.style.display = isHidden ? "flex" : "none";
 
-    if (isHidden && !welcomeShown && welcomeMessage) {
-      appendMessage("Alv", welcomeMessage);
-      welcomeShown = true;
-    }
-    if (isHidden) {
-      chatCloud.style.display = "none";
-    }
-  });
+  if (isHidden && !welcomeShown && welcomeMessage) {
+    appendMessage("Alv", welcomeMessage);
+    welcomeShown = true;
+
+    // 🔼 Only increase count once per open
+    fetch("https://chatbottoolforall-l23o.onrender.com/admin/increase_count", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: userId })
+    }).catch(err => console.error("Failed to increase visitor count", err));
+  }
+
+  if (isHidden) {
+    chatCloud.style.display = "none";
+  }
+});
 
   sendBtn.addEventListener("click", sendMessage);
   userInput.addEventListener("keypress", function (e) {
