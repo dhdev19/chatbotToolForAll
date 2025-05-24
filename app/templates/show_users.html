@@ -43,7 +43,7 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>S.No.</th>
                     <th>Full Name</th>
                     <th>Email</th>
                     <th>WhatsApp Number</th>
@@ -58,7 +58,7 @@
             <tbody>
                 {% for user in users %}
                 <tr>
-                    <td>{{ user.id }}</td>
+                    <td>{{ loop.index }}</td>
                     <td>{{ user.full_name }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.whatsapp_number }}</td>
