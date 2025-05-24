@@ -327,7 +327,7 @@ function showOffers() {
                         function copyCode{{ user.id }}() {
                             const code = document.getElementById("code-snippet-{{ user.id }}").value;
                             navigator.clipboard.writeText(code).then(function() {
-                                alert("Code copied to clipboard for user {{ user.id }}");
+                                alert("Code copied to clipboard for user: {{ user.full_name }}");
                             }, function(err) {
                                 alert("Failed to copy code");
                             });
