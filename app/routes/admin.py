@@ -67,16 +67,6 @@ def increase_count():
     user = User.get_by_id(user_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('''
-        UPDATE users
-        SET visitor_count = COALESCE(visitor_count, 0) + 1
-        WHERE id = %s
-    ''', (user_id,))
-    conn.commit()
-    cursor.close()
-    conn.close()
+    user.update_visitor_count(user_id)
 
     return jsonify({'message': 'Visitor count increased'}), 200
