@@ -58,3 +58,18 @@ def show_users():
     users = User.get_all_users()
     return render_template('show_sales.html', users=users)
 
+
+@admin.route('/admin/increase_count', methods=['POST'])
+def increase_count():
+    user_id = request.json.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'User ID missing'}), 400
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    user.visitor_count += 1
+    db.session.commit()
+
+    return jsonify({'message': 'Visitor count increased', 'visitor_count': user.visitor_count}), 200
