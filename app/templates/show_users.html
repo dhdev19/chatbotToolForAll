@@ -136,11 +136,93 @@
   pointer-events: auto !important;
   z-index: 999999;
 }
+#chat-buttons {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+}
+#chat-buttons button {
+  flex: 1;
+  margin: 0 5px;
+  padding: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 5px;
+  color: white;
+}
+#chat-buttons button:first-child {
+  background: #555;
+}
+#chat-buttons button:last-child {
+  background: #25D366; /* WhatsApp green */
+}
+
+/* Cloud above chatbot */
+#chat-cloud {
+  position: fixed;
+  bottom: 80px;
+  right: 70px;
+  background: white;
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 20px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  z-index: 999998;
+  font-size: 13px;
+}
+#chat-cloud::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 25px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+}
+
+/* WhatsApp popup */
+#whatsapp-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #aaa;
+  padding: 20px;
+  text-align: center;
+  z-index: 1000000;
+}
+#whatsapp-popup button {
+  margin-top: 10px;
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#close-popup {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}
+
 </style>
 
 <div id="chat-widget">
   <div id="chat-header">AI Assistant</div>
   <div id="chat-messages"></div>
+<div id="chat-buttons">
+    <button onclick="showOffers()">🎁 Offers</button>
+    <button onclick="redirectToWhatsApp()">💬 WhatsApp</button>
+  </div>
   <div id="chat-input">
     <input id="user-input" type="text" placeholder="Ask something...">
     <button id="send-btn">Send</button>
@@ -149,6 +231,13 @@
 
 <div id="chat-toggle">💬</div>
 
+<div id="chat-cloud">Hi, I'm Alv. Need help?</div>
+
+<div id="whatsapp-popup">
+  <div id="close-popup" onclick="document.getElementById('whatsapp-popup').style.display='none'">&times;</div>
+  <p>Chat with us directly and we can help you with your needs.</p>
+  <button onclick="redirectToWhatsApp()">Go to WhatsApp</button>
+</div>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const chatToggle = document.getElementById("chat-toggle");
@@ -156,18 +245,37 @@ document.addEventListener("DOMContentLoaded", function () {
   const sendBtn = document.getElementById("send-btn");
   const userInput = document.getElementById("user-input");
   const chatMessages = document.getElementById("chat-messages");
+  const chatCloud = document.getElementById("chat-cloud");
 
   const userId = "{{ user.id }}";
   const welcomeMessage = {{ user.WelcomeMessage | tojson }};
   let welcomeShown = false;
+
+  // Only play voice once per session
+  if (!sessionStorage.getItem("alviVoicePlayed")) {
+    const voices = window.speechSynthesis.getVoices();
+    const femaleVoice = voices.find(voice => voice.name.toLowerCase().includes("female") || voice.name.toLowerCase().includes("google") || voice.gender === "female") || voices[0];
+    const msg = new SpeechSynthesisUtterance("Hi, I am Alv, your personal assistant.");
+    msg.voice = femaleVoice;
+    window.speechSynthesis.speak(msg);
+    sessionStorage.setItem("alviVoicePlayed", "true");
+  }
+
+  // WhatsApp popup after 10s
+  setTimeout(() => {
+    document.getElementById("whatsapp-popup").style.display = "block";
+  }, 10000);
 
   chatToggle.addEventListener("click", function () {
     const isHidden = chatWidget.style.display === "none" || chatWidget.style.display === "";
     chatWidget.style.display = isHidden ? "flex" : "none";
 
     if (isHidden && !welcomeShown && welcomeMessage) {
-      appendMessage("Bot", welcomeMessage);
+      appendMessage("Alv", welcomeMessage);
       welcomeShown = true;
+    }
+    if (isHidden) {
+      chatCloud.style.display = "none";
     }
   });
 
@@ -191,9 +299,9 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       const data = await res.json();
-      appendMessage("Bot", data.response);
+      appendMessage("Alv", data.response);
     } catch (err) {
-      appendMessage("Bot", "Sorry, could not connect to the chatbot.");
+      appendMessage("Alv", "Sorry, could not connect to the chatbot.");
     }
   }
 
@@ -204,6 +312,14 @@ document.addEventListener("DOMContentLoaded", function () {
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 });
+// Helper functions
+function redirectToWhatsApp() {
+  window.open("https://wa.me/919999999999", "_blank");
+}
+
+function showOffers() {
+  alert("🎉 Special Offer: Get 20% off on your first project with DH Genix Media!");
+}
 </script>
                         </textarea>
                         <script>
