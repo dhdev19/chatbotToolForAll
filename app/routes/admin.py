@@ -79,4 +79,4 @@ def increase_count():
     cursor.close()
     conn.close()
 
-    return jsonify({'message': 'Visitor count increased'), 200
+    return jsonify({'message': 'Visitor count increased'}), 200
