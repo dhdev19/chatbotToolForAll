@@ -53,7 +53,6 @@ def delete_user():
 
 
 @bp.route('/admin/sales')
-@admin_required
 def show_sales():
     users = User.get_all_users()
     return render_template('show_sales.html', users=users)
