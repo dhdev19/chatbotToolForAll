@@ -17,7 +17,8 @@ def get_db_connection():
     return mysql.connector.connect(**db_config)
 
 class User:
-    def __init__(self, full_name, email, password_hash, whatsapp_number, business_name, WelcomeMessage, secret_key=None, is_admin=False):
+    def __init__(self, full_name, email, password_hash, whatsapp_number, business_name, WelcomeMessage, secret_key=None, is_admin=False, id=None):
+        self.id = id
         self.full_name = full_name
         self.email = email
         self.password_hash = password_hash
@@ -88,16 +89,38 @@ class User:
         conn.commit()
         cursor.close()
         conn.close()
-    
+
     @staticmethod
-    def get_by_id(user_id):
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
-        user = cursor.fetchone()
-        cursor.close()
-        conn.close()
-        return user
+def get_by_id(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+    row = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    if row:
+        return User(
+            id=row['id'],
+            full_name=row['full_name'],
+            email=row['email'],
+            password_hash=row['password_hash'],
+            whatsapp_number=row['whatsapp_number'],
+            business_name=row['business_name'],
+            WelcomeMessage=row['WelcomeMessage'],
+            secret_key=row['secret_key'],
+            is_admin=row['is_admin'],
+            created_at=row['created_at']
+        )
+    return None
+    # @staticmethod
+    # def get_by_id(user_id):
+    #     conn = get_db_connection()
+    #     cursor = conn.cursor(dictionary=True)
+    #     cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+    #     user = cursor.fetchone()
+    #     cursor.close()
+    #     conn.close()
+    #     return user
 
 
 class QuestionAnswer:
