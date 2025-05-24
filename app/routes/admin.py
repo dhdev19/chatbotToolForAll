@@ -64,7 +64,7 @@ def increase_count():
     if not user_id:
         return jsonify({'error': 'User ID missing'}), 400
 
-    user = User.query.get(user_id)
+    user = User.get_by_id(user_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
