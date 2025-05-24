@@ -51,3 +51,10 @@ def delete_user():
         flash('No user ID provided')
     return redirect(url_for('admin.show_users'))
 
+
+@bp.route('/admin/sales')
+@admin_required
+def show_users():
+    users = User.get_all_users()
+    return render_template('show_sales.html', users=users)
+
