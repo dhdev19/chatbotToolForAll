@@ -67,6 +67,6 @@ def increase_count():
     user = User.get_by_id(user_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
-    user.update_visitor_count(user_id)
+    user.update_visitor_count()
 
     return jsonify({'message': 'Visitor count increased'}), 200
