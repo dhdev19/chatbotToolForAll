@@ -89,7 +89,19 @@ class User:
         conn.commit()
         cursor.close()
         conn.close()
-
+    def update_visitor_count(user_id):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE users
+            SET visitor_count = COALESCE(visitor_count, 0) + 1
+            WHERE id = %s
+        ''', (user_id,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        
+    
     @staticmethod
     def get_by_id(user_id):
         conn = get_db_connection()
