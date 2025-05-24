@@ -34,3 +34,20 @@ def add_user():
         flash('User added successfully')
         return redirect(url_for('admin.dashboard'))
     return render_template('add_user.html') 
+
+
+@bp.route('/admin/deleteuser', methods=['POST'])
+@admin_required
+def delete_user():
+    user_id = request.form.get('user_id')
+    if user_id:
+        user = User.get_by_id(user_id)
+        if user:
+            user.delete()  # Assuming your User model has a .delete() method
+            flash('User deleted successfully')
+        else:
+            flash('User not found')
+    else:
+        flash('No user ID provided')
+    return redirect(url_for('admin.show_users'))
+
