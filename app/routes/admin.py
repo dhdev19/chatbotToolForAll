@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for, session, flash
+from flask import Blueprint, request, render_template, redirect, url_for, session, flash, jsonify
 from app.models import User
 import hashlib
 from app.routes.auth import admin_required
@@ -68,7 +68,15 @@ def increase_count():
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
-    user.visitor_count += 1
-    db.session.commit()
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        UPDATE users
+        SET visitor_count = COALESCE(visitor_count, 0) + 1
+        WHERE id = %s
+    ''', (user_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
 
-    return jsonify({'message': 'Visitor count increased', 'visitor_count': user.visitor_count}), 200
+    return jsonify({'message': 'Visitor count increased'), 200
