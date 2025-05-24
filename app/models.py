@@ -89,14 +89,15 @@ class User:
         conn.commit()
         cursor.close()
         conn.close()
-    def update_visitor_count(user_id):
+        
+    def update_visitor_count(self):
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
             UPDATE users
             SET visitor_count = COALESCE(visitor_count, 0) + 1
             WHERE id = %s
-        ''', (user_id,))
+        ''', (self.id,))
         conn.commit()
         cursor.close()
         conn.close()
