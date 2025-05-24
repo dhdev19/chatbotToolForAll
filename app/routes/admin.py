@@ -59,7 +59,7 @@ def show_users():
     return render_template('show_sales.html', users=users)
 
 
-@admin.route('/admin/increase_count', methods=['POST'])
+@bp.route('/admin/increase_count', methods=['POST'])
 def increase_count():
     user_id = request.json.get('user_id')
     if not user_id:
