@@ -109,7 +109,7 @@ class User:
                 WelcomeMessage=row['WelcomeMessage'],
                 secret_key=row['secret_key'],
                 is_admin=row['is_admin'],
-                created_at=row['created_at']
+                #created_at=row['created_at']
             )
         return None
     # @staticmethod
