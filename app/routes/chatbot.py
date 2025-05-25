@@ -108,9 +108,10 @@ def chatbot_endpoint():
         if not qa_list:
             return jsonify({'response': 'No Q&A data found for this user.'}), 404
 
+        user = User.get_by_id(user_id)
         context = '\n'.join([f"Q: {qa['question']}\nA: {qa['answer']}" for qa in qa_list])
 
-        prompt = f"""Your name is Alvi, you are a chatbot assistant. Keep your tone friendly and professional. Answer questions based on the following data and make sure to limit your response to the data provided and in 50 words. If you are not sure about the answer, say "I'm sorry, I don't have information about that. Please contact us directly for more information.":
+        prompt = f"""Your name is Alvi, you are a chatbot assistant. Keep your tone friendly and professional. Answer questions based on the following data and make sure to limit your response to the data provided and in 50 words. If you are not sure about the answer, say "I'm sorry, I don't have information about that. Please contact us directly on 	<a href="https://wa.me/{{ user.whatsapp_number }}" target="_blank">Whatsapp</a> or <a href="mailto:{{ user.email }}?subject=Hello&body=Message%20content" target="_blank">Email</a>for more information.":
 
 Q&A Data:
 {context}
