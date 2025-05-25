@@ -110,7 +110,7 @@ def chatbot_endpoint():
 
         user = User.get_by_id(user_id)
         context = '\n'.join([f"Q: {qa['question']}\nA: {qa['answer']}" for qa in qa_list])
-        context + = f'Q: Contact information\nA: <a href="https://wa.me/{ user.whatsapp_number }" target="_blank">Whatsapp</a> and <a href="mailto:{ user.email }?subject=Hello&body=Message%20content" target="_blank">Email</a>'
+        context += f'Q: Contact information\nA: <a href="https://wa.me/{ user.whatsapp_number }" target="_blank">Whatsapp</a> and <a href="mailto:{ user.email }?subject=Hello&body=Message%20content" target="_blank">Email</a>'
 
         prompt = f"""Your name is Alvi, you are a chatbot assistant. Keep your tone friendly and professional. Answer questions based on the following data and make sure to limit your response to the data provided and in 50 words.If you are not sure about the answer, pass the contact information and say "I'm sorry, I don't have information about that. Please contact us directly for more information":
 
