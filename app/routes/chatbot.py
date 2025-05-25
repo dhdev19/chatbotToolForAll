@@ -1,6 +1,6 @@
 
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, session, flash
-from app.models import QuestionAnswer
+from app.models import QuestionAnswer, User
 from app.routes.auth import login_required
 import os
 from dotenv import load_dotenv
