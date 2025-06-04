@@ -172,6 +172,9 @@ class User:
                 WelcomeMessage=row['WelcomeMessage'],
                 secret_key=row['secret_key'],
                 is_admin=row['is_admin'],
+                offers=row['offers'],
+                whatsapp_message='whatsapp_message'],
+                popup_text=['popup_text']
                 #created_at=row['created_at']
             )
         return None
