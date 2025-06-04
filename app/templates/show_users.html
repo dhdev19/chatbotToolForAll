@@ -252,6 +252,45 @@ document.addEventListener("DOMContentLoaded", function () {
   const welcomeMessage = {{ user.WelcomeMessage | tojson }};
   let welcomeShown = false;
 
+
+  let offersText = "";
+  let whatsappMessage = "";
+  let popupText = "";
+
+  // Fetch live info
+  fetch("https://chatbottoolforall-l23o.onrender.com/chatbot/get-live-info", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: userId })
+  })
+    .then(res => res.json())
+    .then(data => {
+      offersText = data.offers || "🎉 No offers available at the moment.";
+      whatsappMessage = data.whatsapp_message || "Let's chat on WhatsApp!";
+      popupText = data.popup_text || "Chat with us directly and we can help you with your needs.";
+
+      // Inject popup text
+      document.querySelector("#whatsapp-popup p").innerText = popupText;
+    })
+    .catch(err => {
+      console.error("Failed to fetch live info", err);
+    });
+
+  function showOffers() {
+    alert(offersText);
+  }
+
+  function redirectToWhatsApp() {
+    const phone = "{{ user.whatsapp_number }}";
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(whatsappMessage)}`;
+    window.open(url, "_blank");
+  }
+
+  // Make redirectToWhatsApp globally available
+  window.redirectToWhatsApp = redirectToWhatsApp;
+  window.showOffers = showOffers;
+
+
   // Only play voice once per session
   if (!sessionStorage.getItem("alviVoicePlayed")) {
     const voices = window.speechSynthesis.getVoices();
