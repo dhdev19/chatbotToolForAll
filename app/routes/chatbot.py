@@ -161,11 +161,15 @@ def edit_popup_text():
     flash("Popup text updated successfully", "success")
     return redirect(url_for('dashboard.profile'))
 
-from flask import request, jsonify
-from app.models import User  # adjust path if needed
 
-@bp.route('/get-live-info', methods=['POST'])
+
+@bp.route('/get-live-info', methods=['POST', 'OPTIONS'])
+@cross_origin(origins="*")  # enable CORS for this route explicitly
 def get_info():
+    if request.method == 'OPTIONS':
+        # Preflight request
+        return '', 200
+
     data = request.get_json()
     user_id = data.get('user_id')
 
