@@ -143,7 +143,7 @@ def edit_whatsapp_message():
     message = request.form['whatsapp_message']
     User.update_whatsapp_message(session['user_id'], message)
     flash("WhatsApp message updated successfully", "success")
-    return redirect(url_for('chatbot.profile'))
+    return redirect(url_for('dashboard.profile'))
 
 @bp.route('/edit-offers', methods=['POST'])
 @login_required
@@ -151,7 +151,7 @@ def edit_offers():
     offers = request.form['offers']
     User.update_offers(session['user_id'], offers)
     flash("Offers updated successfully", "success")
-    return redirect(url_for('chatbot.profile'))
+    return redirect(url_for('dashboard.profile'))
 
 @bp.route('/edit-popup-text', methods=['POST'])
 @login_required
@@ -159,4 +159,4 @@ def edit_popup_text():
     popup_text = request.form['popup_text']
     User.update_popup_text(session['user_id'], popup_text)
     flash("Popup text updated successfully", "success")
-    return redirect(url_for('chatbot.profile'))
+    return redirect(url_for('dashboard.profile'))
