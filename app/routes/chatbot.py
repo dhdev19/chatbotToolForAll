@@ -162,13 +162,11 @@ def edit_popup_text():
     return redirect(url_for('dashboard.profile'))
 
 
-
-@bp.route('/get-live-info', methods=['POST', 'OPTIONS'])
-@cross_origin(origins="*")  # enable CORS for this route explicitly
+@bp.route('/chatbot/get-live-info', methods=['POST', 'OPTIONS'])
+@cross_origin(origins=['*'], methods=['POST', 'OPTIONS'], allow_headers=['Content-Type', 'Authorization'])
 def get_info():
     if request.method == 'OPTIONS':
-        # Preflight request
-        return '', 200
+        return '', 200  # ✅ Handle preflight
 
     data = request.get_json()
     user_id = data.get('user_id')
