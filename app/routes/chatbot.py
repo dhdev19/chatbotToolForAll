@@ -137,7 +137,7 @@ Answer:"""
 
 
 
-@bp.route('/chatbot/edit-whatsapp-message', methods=['POST'])
+@bp.route('/edit-whatsapp-message', methods=['POST'])
 @login_required
 def edit_whatsapp_message():
     message = request.form['whatsapp_message']
@@ -145,7 +145,7 @@ def edit_whatsapp_message():
     flash("WhatsApp message updated successfully", "success")
     return redirect(url_for('chatbot.profile'))
 
-@bp.route('/chatbot/edit-offers', methods=['POST'])
+@bp.route('/edit-offers', methods=['POST'])
 @login_required
 def edit_offers():
     offers = request.form['offers']
@@ -153,7 +153,7 @@ def edit_offers():
     flash("Offers updated successfully", "success")
     return redirect(url_for('chatbot.profile'))
 
-@bp.route('/chatbot/edit-popup-text', methods=['POST'])
+@bp.route('/edit-popup-text', methods=['POST'])
 @login_required
 def edit_popup_text():
     popup_text = request.form['popup_text']
