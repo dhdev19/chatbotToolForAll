@@ -3,6 +3,7 @@
 {% block title %}Profile{% endblock %}
 
 {% block extra_css %}
+<style>
 .profile-container {
     background: white;
     padding: 30px;
@@ -21,10 +22,13 @@
     font-weight: 600;
     color: #495057;
 }
-.profile-info p {
-    margin-bottom: 0;
+.profile-info p, .profile-info textarea {
     color: #6c757d;
 }
+textarea.form-control {
+    resize: vertical;
+}
+</style>
 {% endblock %}
 
 {% block content %}
@@ -76,5 +80,33 @@
             </div>
         </div>
     </div>
+
+    <!-- Editable WhatsApp Message -->
+    <form method="POST" action="{{ url_for('chatbot.edit_whatsapp_message') }}" class="mb-4">
+        <div class="form-group">
+            <label for="whatsapp_message">WhatsApp Message</label>
+            <textarea class="form-control" name="whatsapp_message" rows="3">{{ user.whatsapp_message }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update WhatsApp Message</button>
+    </form>
+
+    <!-- Editable Offers -->
+    <form method="POST" action="{{ url_for('chatbot.edit_offers') }}" class="mb-4">
+        <div class="form-group">
+            <label for="offers">Offers</label>
+            <textarea class="form-control" name="offers" rows="3">{{ user.offers }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Offers</button>
+    </form>
+
+    <!-- Editable Popup Text -->
+    <form method="POST" action="{{ url_for('chatbot.edit_popup_text') }}">
+        <div class="form-group">
+            <label for="popup_text">WhatsApp Popup Text</label>
+            <textarea class="form-control" name="popup_text" rows="3">{{ user.popup_text }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Popup Text</button>
+    </form>
+
 </div>
-{% endblock %} 
+{% endblock %}
