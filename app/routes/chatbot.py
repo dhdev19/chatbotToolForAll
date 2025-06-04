@@ -160,3 +160,24 @@ def edit_popup_text():
     User.update_popup_text(session['user_id'], popup_text)
     flash("Popup text updated successfully", "success")
     return redirect(url_for('dashboard.profile'))
+
+from flask import request, jsonify
+from app.models import User  # adjust path if needed
+
+@bp.route('/get-live-info', methods=['POST'])
+def get_info():
+    data = request.get_json()
+    user_id = data.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'user_id not provided'}), 400
+
+    user = User.get_by_id(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    return jsonify({
+        'offers': user.offers,
+        'whatsapp_message': user.whatsapp_message,
+        'popup_text': user.popup_text
+    })
