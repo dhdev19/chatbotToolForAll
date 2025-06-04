@@ -17,7 +17,7 @@ def get_db_connection():
     return mysql.connector.connect(**db_config)
 
 class User:
-    def __init__(self, full_name, email, password_hash, whatsapp_number, business_name, WelcomeMessage, secret_key=None, is_admin=False, id=None):
+    def __init__(self, full_name, email, password_hash, whatsapp_number, business_name, WelcomeMessage, secret_key=None, is_admin=False, id=None, offers='Special Offer: Contact us!', popup_text='Chat with us directly and we can help you with your needs.', whatsapp_message='I want to know more about your projects'):
         self.id = id
         self.full_name = full_name
         self.email = email
@@ -28,6 +28,9 @@ class User:
         self.is_admin = is_admin
         self.WelcomeMessage = WelcomeMessage
         self.created_at = datetime.utcnow()
+        self.offers = offers
+        self.popup_text = popup_text
+        self.whatsapp_message = whatsapp_message
 
     @staticmethod
     def create_table():
@@ -43,6 +46,9 @@ class User:
                 business_name VARCHAR(100),
                 secret_key VARCHAR(64) UNIQUE,
                 WelcomeMessage TEXT,
+                offers TEXT,
+                popup_text TEXT,
+                whatsapp_message TEXT,
                 is_admin BOOLEAN DEFAULT FALSE,
                 created_at DATETIME
             )
@@ -101,7 +107,51 @@ class User:
         conn.commit()
         cursor.close()
         conn.close()
-        
+
+
+
+
+    @staticmethod
+    def update_offers(user_id, offers):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE users
+            SET offers = %s
+            WHERE id = %s
+        ''',(offers, user_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+
+    @staticmethod
+    def update_whatsapp_message(user_id, message):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE users
+            SET whatsapp_message = %s
+            WHERE id = %s
+        ''',(message, user_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+    @staticmethod
+    def update_popup_text(user_id, popup_text):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE users
+            SET popup_text = %s
+            WHERE id = %s
+        ''',(popup_text, user_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+
     
     @staticmethod
     def get_by_id(user_id):
@@ -125,15 +175,7 @@ class User:
                 #created_at=row['created_at']
             )
         return None
-    # @staticmethod
-    # def get_by_id(user_id):
-    #     conn = get_db_connection()
-    #     cursor = conn.cursor(dictionary=True)
-    #     cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
-    #     user = cursor.fetchone()
-    #     cursor.close()
-    #     conn.close()
-    #     return user
+
 
 
 class QuestionAnswer:
