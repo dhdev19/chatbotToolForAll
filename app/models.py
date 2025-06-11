@@ -309,17 +309,17 @@ class QuestionAnswer:
     def get_by_user_id(user_id):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM question_answers WHERE user_id = %s', (user_id,))
+        cursor.execute('SELECT question_answers.*, projects.project FROM question_answers LEFT JOIN projects ON question_answers.project_id = projects.id WHERE question_answers.user_id = %s AND projects.user_id = %s ORDER BY projects.id', (user_id, user_id))
         qa_list = cursor.fetchall()
         cursor.close()
         conn.close()
         return qa_list
 
     @staticmethod
-    def get_by_user_id_and_projects(user_id):
+    def get_by_user_id_and_project_id(user_id, project_id):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute('SELECT question_answers.*, projects.project FROM question_answers LEFT JOIN projects ON question_answers.project_id = projects.id WHERE question_answers.user_id = %s AND projects.user_id = %s ORDER BY projects.id', (user_id, user_id))
+        cursor.execute('SELECT question_answers.*, projects.project FROM question_answers LEFT JOIN projects ON question_answers.project_id = projects.id WHERE question_answers.user_id = %s AND projects.id_id = %s', (user_id, project_id))
         qa_list = cursor.fetchall()
         cursor.close()
         conn.close()
