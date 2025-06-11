@@ -40,7 +40,7 @@
     <label for="project_filter" class="me-2">Filter by Project:</label>
     <select name="project_id" id="project_filter" class="form-select me-2" style="width: auto;" onchange="this.form.submit()">
         <option value="">All Projects</option>
-        {% for project in user_projects %}
+        {% for project in project_list %}
             <option value="{{ project.id }}" {% if request.args.get('project_id') == project.id|string %}selected{% endif %}>
                 {{ project.project }}
             </option>
