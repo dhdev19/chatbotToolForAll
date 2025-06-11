@@ -90,6 +90,17 @@ class User:
         conn.close()
         return users
 
+    @staticmethod
+    def get_all_users_with_project_count():
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('SELECT users.*,  COUNT(projects.id) AS project_count FROM users LEFT JOIN projects ON users.id = projects.user_id GROUP BY users.id')
+        users = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return users
+
+    
     def delete(self):
         conn = get_db_connection()
         cursor = conn.cursor()
