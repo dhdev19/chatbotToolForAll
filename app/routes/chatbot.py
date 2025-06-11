@@ -54,8 +54,8 @@ def add_qa():
 @bp.route('/chatbot/projects', methods=['GET', 'POST'])
 @login_required
 def projects():
-        user_id = session['user_id']
-        projects = Projects.get_by_user_id(user_id)
+    user_id = session['user_id']
+    projects = Projects.get_by_user_id(user_id)
     return render_template('projects.html', projects=projects)
 
 
