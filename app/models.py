@@ -228,10 +228,11 @@ class Projects:
         cursor.close()
         conn.close()
 
-    def delete(self):
+    @staticmethod
+    def delete(project_id):
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('DELETE FROM projects WHERE id = %s', (self.id,))
+        cursor.execute('DELETE FROM projects WHERE id = %s', (project_id,))
         conn.commit()
         cursor.close()
         conn.close()
@@ -256,6 +257,7 @@ class Projects:
         conn.close()
         return count
 
+    @staticmethod
     def update_project_status(project_id):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
