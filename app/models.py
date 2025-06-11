@@ -269,13 +269,14 @@ class Projects:
         return count
 
     @staticmethod
-    def update_project_status(project_id):
+    def update_project_status(project_id, approved=True):
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute('UPDATE projects SET approval = 1 WHERE id = %s', (project_id,))
+        cursor = conn.cursor()
+        cursor.execute('UPDATE projects SET approval = %s WHERE id = %s', (1 if approved else 0, project_id))
         conn.commit()
         cursor.close()
         conn.close()
+
 
 
 
