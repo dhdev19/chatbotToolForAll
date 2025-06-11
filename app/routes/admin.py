@@ -77,6 +77,21 @@ def approve_project():
     
     return redirect(url_for('chatbot.ahow_users'))
 
+@bp.route('/admin/getUserProjects')
+@admin_required
+def get_user_projects():
+    user_id = request.args.get('user_id', type=int)
+    projects = Projects.get_all_projects(user_id)
+    return jsonify(projects)
+
+@bp.route('/admin/revokeProject')
+@admin_required
+def revoke_project():
+    pid = request.args.get('project_id', type=int)
+    Projects.update_project_status(pid, approved=False)
+    return ('', 204)
+
+
 
 @bp.route('/admin/increase_count', methods=['POST'])
 def increase_count():
