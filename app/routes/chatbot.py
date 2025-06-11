@@ -86,7 +86,7 @@ def add_project():
 @login_required
 def view_qa():
     user_id = session['user_id']
-    qa_list = QuestionAnswer.get_by_user_id(user_id)
+    qa_list = QuestionAnswer.get_by_user_id_and_projects(user_id)
     return render_template('view_qa.html', qa_list=qa_list)
 
 
