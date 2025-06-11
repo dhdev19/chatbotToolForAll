@@ -14,6 +14,8 @@ load_dotenv()
 
 # Configure Gemini with API key from environment variable
 api_key = os.getenv('GOOGLE_API_KEY')
+chatbot_api_url = os.getenv('CHATBOT_API_URL')
+
 
 try:
     print("Attempting to configure Gemini...")
@@ -67,7 +69,7 @@ def add_qa():
 def projects():
     user_id = session['user_id']
     projects = Projects.get_all_projects(user_id)
-    return render_template('projects.html', projects=projects)
+    return render_template('projects.html', projects=projects, chatbot_api_url=chatbot_api_url)
 
 @bp.route('/chatbot/delete_project<int:project_id>', methods=['GET', 'POST'])
 @login_required
