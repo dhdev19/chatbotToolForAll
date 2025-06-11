@@ -29,11 +29,12 @@ class Projects:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            CREATE TABLE IF NOT EXISTS projects
+            CREATE TABLE IF NOT EXISTS projects (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 project VARCHAR(120) UNIQUE NOT NULL,
                 usage_count INT DEFAULT 0,
                 approval BOOLEAN DEFAULT FALSE,
+                user_id INT,
                 FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
             )
         ''')
