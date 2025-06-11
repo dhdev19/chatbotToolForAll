@@ -55,7 +55,7 @@ def add_qa():
 @login_required
 def projects():
     user_id = session['user_id']
-    projects = Projects.get_by_user_id(user_id)
+    projects = Projects.get_all_projects(user_id)
     return render_template('projects.html', projects=projects)
 
 
