@@ -214,11 +214,16 @@
   font-weight: bold;
   font-size: 16px;
 }
-
+#chat-close {
+  float: right;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+}
 </style>
 
 <div id="chat-widget">
-  <div id="chat-header">AI Assistant</div>
+  <div id="chat-header">AI Assistant <span id="chat-close">×</span></div>
   <div id="chat-messages"></div>
 <div id="chat-buttons">
     <button onclick="showOffers()">Offers</button>
@@ -300,7 +305,9 @@ document.addEventListener("DOMContentLoaded", function () {
     window.speechSynthesis.speak(msg);
     sessionStorage.setItem("alviVoicePlayed", "true");
   }
-
+document.getElementById("chat-close").addEventListener("click", function () {
+  document.getElementById("chat-widget").style.display = "none";
+});
   // WhatsApp popup after 10s
   setTimeout(() => {
     document.getElementById("whatsapp-popup").style.display = "block";
