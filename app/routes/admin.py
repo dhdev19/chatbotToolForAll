@@ -15,7 +15,7 @@ def dashboard():
 @bp.route('/admin/users')
 @admin_required
 def show_users():
-    users = User.get_all_users_with_project_count()
+    users = User.get_all_users()
     return render_template('show_users.html', users=users, chatbot_api_url=os.getenv('CHATBOT_API_URL'))
 
 @bp.route('/admin/add_user', methods=['GET', 'POST'])
@@ -54,7 +54,7 @@ def delete_user():
 
 @bp.route('/admin/sales')
 def show_sales():
-    users = User.get_all_users()
+    users = User.get_all_users_with_project_count()
     return render_template('show_sales.html', users=users)
 
 
