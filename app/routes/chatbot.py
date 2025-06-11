@@ -147,7 +147,7 @@ def chatbot_endpoint():
         data = request.json
         user_input = data.get('query')
         user_id = data.get('user_id')
-        project_id = data.get('project_id)
+        project_id = data.get('project_id')
 
         if not user_input or not user_id:
             return jsonify({'response': 'Please provide both query and user_id.'}), 400
