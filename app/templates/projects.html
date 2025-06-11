@@ -62,7 +62,6 @@
                         {% endif %}
                     </td>
                     <td>{% if project['approval'] == 1 %}
-                        <td>
                         <button class="btn btn-sm btn-outline-primary" onclick="copyCode{{ project['user_id'] }}()">Copy Code</button>
                         <textarea id="code-snippet-{{ project['user_id'] }}" style="display:none;">
 
@@ -377,7 +376,6 @@ function showOffers() {
                             });
                         }
                         </script>
-                    </td>
 
                     {% else %}
                     Unauthorized
