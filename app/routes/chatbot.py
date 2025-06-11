@@ -37,18 +37,6 @@ except Exception as e:
     chat = None
 
 
-# @bp.route('/chatbot/add_qa', methods=['GET', 'POST'])
-# @login_required
-# def add_qa():
-#     if request.method == 'POST':
-#         question = request.form.get('question')
-#         answer = request.form.get('answer')
-#         user_id = session['user_id']
-#         qa = QuestionAnswer(question, answer, user_id)
-#         qa.save()
-#         flash('Q&A added successfully!')
-#         return redirect(url_for('chatbot.view_qa'))
-#     return render_template('add_qa.html')
 
 @bp.route('/chatbot/add_qa', methods=['GET', 'POST'])
 @login_required
@@ -159,11 +147,12 @@ def chatbot_endpoint():
         data = request.json
         user_input = data.get('query')
         user_id = data.get('user_id')
+        project_id = data.get('project_id)
 
         if not user_input or not user_id:
             return jsonify({'response': 'Please provide both query and user_id.'}), 400
 
-        qa_list = QuestionAnswer.get_by_user_id(user_id)
+        qa_list = QuestionAnswer.get_by_project_id(project_id)
         if not qa_list:
             return jsonify({'response': 'No Q&A data found for this user.'}), 404
 
