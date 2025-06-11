@@ -70,7 +70,7 @@
                         <span class="badge badge-secondary">User</span>
                         {% endif %}
                     </td>
-                    <td data-bs-toggle="modal" data-bs-target="#popupModal{{ user.id }}">{{ user.project_count }}</td>
+                    <td data-bs-toggle="modal" data-bs-target="#ProjectsModal">{{ user.project_count }}</td>
 
 
                     <td>{{ user.WelcomeMessage }}</td>
@@ -437,7 +437,7 @@ function showOffers() {
 
 
 
-{% block extra_js %}
+
 document.addEventListener("DOMContentLoaded", function () {
   const projectLinks = document.querySelectorAll('.project-count-link');
   const modal = new bootstrap.Modal(document.getElementById('projectsModal'));
