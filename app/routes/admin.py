@@ -64,7 +64,7 @@ def approve_project():
     
     if not project_id:
         flash("Project ID is required.", "danger")
-        return redirect(url_for('chatbot.show_users'))
+        return redirect(url_for('admin.show_users'))
 
     try:
         project_id = int(project_id)
@@ -75,7 +75,7 @@ def approve_project():
     except Exception as e:
         flash(f"An error occurred: {str(e)}", "danger")
     
-    return redirect(url_for('chatbot.show_users'))
+    return redirect(url_for('admin.show_users'))
 
 @bp.route('/admin/getUserProjects')
 @admin_required
