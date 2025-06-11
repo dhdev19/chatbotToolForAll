@@ -74,7 +74,7 @@ def add_project():
     if not project_name:
         flash('Project name is required.', 'danger')
         return redirect(url_for('chatbot.projects'))
-    project = Project(user_id=session['id'], project=project_name)
+    project = Projects(user_id=session['id'], project=project_name)
     try:
         project.save()
         flash('Project added successfully.', 'success')
