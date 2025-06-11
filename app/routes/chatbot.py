@@ -58,7 +58,7 @@ def projects():
     projects = Projects.get_all_projects(user_id)
     return render_template('projects.html', projects=projects)
 
-@bp.route('/chatbot/add_project', methods=['GET', 'POST'])
+@bp.route('/chatbot/delete_project', methods=['GET', 'POST'])
 @login_required
 def delete_project(project_id):
     user_id = session['user_id']
