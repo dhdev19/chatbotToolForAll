@@ -62,7 +62,7 @@ def show_sales():
 def approve_project():
     pid = request.args.get('project_id', type=int)
     Projects.update_project_status(pid, approved=True)
-    return ('', 204)
+    return redirect(url_for('admin.show_users'))
 
 @bp.route('/admin/getUserProjects')
 @admin_required
@@ -76,7 +76,7 @@ def get_user_projects():
 def revoke_project():
     pid = request.args.get('project_id', type=int)
     Projects.update_project_status(pid, approved=False)
-    return ('', 204)
+    return redirect(url_for('admin.show_users'))
 
 
 
