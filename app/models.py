@@ -219,7 +219,7 @@ class Projects:
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO projects (user_id, project)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s)
         ''', (self.user_id, self.project))
         conn.commit()
         cursor.close()
