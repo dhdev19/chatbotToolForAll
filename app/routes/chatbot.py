@@ -58,7 +58,13 @@ def projects():
     projects = Projects.get_all_projects(user_id)
     return render_template('projects.html', projects=projects)
 
-
+@login_required
+def delete_project(project_id):
+    user_id = session['user_id']
+    projects = Projects.delete(project_id)
+    flash('Project deleted successfully')
+    return redirect(url_for('chatbot.projects'))
+    
 @bp.route('/chatbot/view_qa')
 @login_required
 def view_qa():
