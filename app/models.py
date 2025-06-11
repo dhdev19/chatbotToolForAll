@@ -328,6 +328,16 @@ class QuestionAnswer:
         return qa_list
 
     @staticmethod
+    def get_by_project_id(project_id):
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM question_answers WHERE project_id = %s', (project_id,))
+        qa_list = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return qa_list
+
+    @staticmethod
     def get_by_user_id_and_project_id(user_id, project_id):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
