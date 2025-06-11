@@ -273,7 +273,7 @@ class QuestionAnswer:
                 question TEXT NOT NULL,
                 answer TEXT NOT NULL,
                 user_id INT NOT NULL,
-                project_id INT NOT NULL
+                project_id INT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             )
