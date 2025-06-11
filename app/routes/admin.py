@@ -61,7 +61,7 @@ def show_sales():
 @admin_required
 def approve_project():
     pid = request.args.get('project_id', type=int)
-    Projects.update_project_status(pid, approved=False)
+    Projects.update_project_status(pid, approved=True)
     return ('', 204)
 
 @bp.route('/admin/getUserProjects')
