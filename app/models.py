@@ -193,7 +193,7 @@ class User:
         return None
 
 class Projects:
-    def __init__(self, user_id, project, usage_count, approval = 0, id=None):
+    def __init__(self, user_id, project, usage_count = 0, approval = 0, id=None):
         self.id = id
         self.user_id = user_id
         self.project = project
