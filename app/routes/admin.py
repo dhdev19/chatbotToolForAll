@@ -57,6 +57,26 @@ def show_sales():
     users = User.get_all_users_with_project_count()
     return render_template('show_sales.html', users=users)
 
+@bp.route('/admin/approveProject')
+@admin_required
+def approve_project():
+    project_id = request.args.get('project_id')
+    
+    if not project_id:
+        flash("Project ID is required.", "danger")
+        return redirect(url_for('chatbot.show_users'))
+
+    try:
+        project_id = int(project_id)
+        Project.update_project_status(project_id)
+        flash("Project approved successfully!", "success")
+    except ValueError:
+        flash("Invalid Project ID.", "danger")
+    except Exception as e:
+        flash(f"An error occurred: {str(e)}", "danger")
+    
+    return redirect(url_for('chatbot.ahow_users'))
+
 
 @bp.route('/admin/increase_count', methods=['POST'])
 def increase_count():
