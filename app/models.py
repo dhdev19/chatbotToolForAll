@@ -241,7 +241,7 @@ class Projects:
     def get_all_projects(user_id):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute('SELECT users.full_name, users.email, users.whatsapp_number, users.WelcomeMessage, users.business_name, users.offers, users.popup_text, users.whatsapp_message, projects.* FROM projects LEFT JOIN users ON projects.user_id WHERE projects.user_id = %s', (user_id,))
+        cursor.execute('SELECT users.full_name, users.email, users.whatsapp_number, users.WelcomeMessage, users.business_name, users.offers, users.popup_text, users.whatsapp_message, projects.* FROM projects RIGHT JOIN users ON projects.user_id WHERE projects.user_id = %s', (user_id,))
         projects = cursor.fetchall()
         cursor.close()
         conn.close()
