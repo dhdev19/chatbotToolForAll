@@ -70,7 +70,15 @@
                         <span class="badge badge-secondary">User</span>
                         {% endif %}
                     </td>
-                    <td>{{ user.project }}</td>
+                    <td>
+                        <a href="#"
+                         class="project-count-link"
+                         data-user-id="{{ user.id }}"
+                         data-user-name="{{ user.full_name }}">
+                        {{ user.project_count or 0 }}
+                      </a>
+                    </td>
+
                     <td>{{ user.WelcomeMessage }}</td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary" onclick="copyCode{{ user.id }}()">Copy Code</button>
@@ -403,4 +411,105 @@ function showOffers() {
         </table>
     </div>
 </div>
+
+<!-- Projects Modal -->
+<div class="modal fade" id="projectsModal" tabindex="-1" aria-labelledby="projectsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          Projects for <span id="modalClientName">Client</span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Project Name</th>
+              <th>Approval Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="projectsModalBody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Modal logic to show project details
+    const projectLinks = document.querySelectorAll('.project-count-link');
+    const modal = new bootstrap.Modal(document.getElementById('projectModal'));
+
+    projectLinks.forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const userId = this.getAttribute('data-user-id');
+        const userName = this.getAttribute('data-user-name');
+
+        fetch(`/admin/get-projects/${userId}`)
+          .then(res => res.json())
+          .then(data => {
+            const modalTitle = document.getElementById('projectModalLabel');
+            const modalBody = document.getElementById('projectModalBody');
+            modalTitle.textContent = `Projects of ${userName}`;
+
+            if (data.projects && data.projects.length > 0) {
+              const tableRows = data.projects.map((p, i) => `
+                <tr>
+                  <td>${i + 1}</td>
+                  <td>${p.name}</td>
+                  <td>
+                    <span class="badge ${p.approved ? 'bg-success' : 'bg-danger'}">
+                      ${p.approved ? 'Approved' : 'Pending'}
+                    </span>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm ${p.approved ? 'btn-danger' : 'btn-success'}"
+                            onclick="toggleApproval(${p.id}, ${!p.approved})">
+                      ${p.approved ? 'Revoke' : 'Approve'}
+                    </button>
+                  </td>
+                </tr>
+              `).join('');
+              modalBody.innerHTML = `<table class="table">${tableRows}</table>`;
+            } else {
+              modalBody.innerHTML = "<p>No projects found.</p>";
+            }
+
+            modal.show();
+          });
+      });
+    });
+  });
+
+  function toggleApproval(projectId, newStatus) {
+    fetch(`/admin/toggle-project-status/${projectId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ approved: newStatus })
+    })
+    .then(res => res.json())
+    .then(response => {
+      if (response.success) {
+        location.reload(); // Or re-fetch modal content instead
+      } else {
+        alert("Failed to update project status.");
+      }
+    });
+  }
+</script>
+{% endblock %}
+
+
 {% endblock %}
