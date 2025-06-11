@@ -65,6 +65,7 @@ def delete_project(project_id):
     flash('Project deleted successfully')
     return redirect(url_for('chatbot.projects'))
 
+@bp.route('/chatbot/add_project', methods=['GET', 'POST'])
 @login_required
 def add_project():
     return render_template('view_qa.html', qa_list=qa_list)
