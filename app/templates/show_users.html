@@ -448,7 +448,7 @@ function showOffers() {
   document.addEventListener("DOMContentLoaded", function () {
     // Modal logic to show project details
     const projectLinks = document.querySelectorAll('.project-count-link');
-    const modal = new bootstrap.Modal(document.getElementById('projectModal'));
+    const modal = new bootstrap.Modal(document.getElementById('projectsModal'));
 
     projectLinks.forEach(link => {
       link.addEventListener('click', function (e) {
@@ -460,8 +460,8 @@ function showOffers() {
         fetch(`/admin/get-projects/${userId}`)
           .then(res => res.json())
           .then(data => {
-            const modalTitle = document.getElementById('projectModalLabel');
-            const modalBody = document.getElementById('projectModalBody');
+            const modalTitle = document.getElementById('modalClientName');
+            const modalBody = document.getElementById('projectsModalBody');
             modalTitle.textContent = `Projects of ${userName}`;
 
             if (data.projects && data.projects.length > 0) {
