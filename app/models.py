@@ -232,6 +232,18 @@ class Projects:
         conn.close()
         return projects
 
+    @staticmethod
+    def get_project_count(user_id):
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('SELECT COUNT(*) FROM projects WHERE user_id = %s', (user_id,))
+        project_count = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return project_count
+
+
+
 
 class QuestionAnswer:
     def __init__(self, question, answer, user_id):
