@@ -50,7 +50,7 @@
             <tbody>
                 {% for qa in qa_list %}
                 <tr>
-                    <td>{{ qa['id'] }}</td>
+                    <td>{{ loop.index }}</td>
                     <td>{{ qa['question'] }}</td>
                     <td>{{ qa['answer'] }}</td>
                     <td>{{ qa['created_at'].strftime('%Y-%m-%d %H:%M:%S') if qa['created_at'] else 'N/A' }}</td>
