@@ -37,18 +37,41 @@ except Exception as e:
     chat = None
 
 
+# @bp.route('/chatbot/add_qa', methods=['GET', 'POST'])
+# @login_required
+# def add_qa():
+#     if request.method == 'POST':
+#         question = request.form.get('question')
+#         answer = request.form.get('answer')
+#         user_id = session['user_id']
+#         qa = QuestionAnswer(question, answer, user_id)
+#         qa.save()
+#         flash('Q&A added successfully!')
+#         return redirect(url_for('chatbot.view_qa'))
+#     return render_template('add_qa.html')
+
 @bp.route('/chatbot/add_qa', methods=['GET', 'POST'])
 @login_required
 def add_qa():
+    user_id = session['user_id']
+    project_list = Projects.get_all_approved_projects(user_id)
+
     if request.method == 'POST':
         question = request.form.get('question')
         answer = request.form.get('answer')
-        user_id = session['user_id']
-        qa = QuestionAnswer(question, answer, user_id)
+        project_id = request.form.get('project_id')
+
+        if not project_id:
+            flash('Please select a project.', 'danger')
+            return redirect(url_for('chatbot.add_qa'))
+
+        qa = QuestionAnswer(question, answer, user_id, project_id=project_id)
         qa.save()
-        flash('Q&A added successfully!')
+        flash('Q&A added successfully!', 'success')
         return redirect(url_for('chatbot.view_qa'))
-    return render_template('add_qa.html')
+
+    return render_template('add_qa.html', project_list=project_list)
+
 
 
 @bp.route('/chatbot/projects', methods=['GET', 'POST'])
