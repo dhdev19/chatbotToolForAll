@@ -1,6 +1,6 @@
 
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, session, flash
-from app.models import QuestionAnswer, User
+from app.models import QuestionAnswer, User, Projects
 from app.routes.auth import login_required
 import os
 from dotenv import load_dotenv
@@ -49,6 +49,14 @@ def add_qa():
         flash('Q&A added successfully!')
         return redirect(url_for('chatbot.view_qa'))
     return render_template('add_qa.html')
+
+
+@bp.route('/chatbot/projects', methods=['GET', 'POST'])
+@login_required
+def projects():
+        user_id = session['user_id']
+        projects = Projects.get_by_user_id(user_id)
+    return render_template('projects.html', projects=projects)
 
 
 @bp.route('/chatbot/view_qa')
