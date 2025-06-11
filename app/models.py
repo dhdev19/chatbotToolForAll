@@ -3,7 +3,7 @@ from datetime import datetime
 import uuid
 import os
 from dotenv import load_dotenv
-
+load_dotenv() 
 # MySQL connection configuration
 db_config = {
     'host': os.getenv('HOST'),
@@ -213,6 +213,9 @@ class Projects:
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             )
         ''')
+        conn.commit()
+        cursor.close()
+        conn.close()
 
     def save(self):
         conn = get_db_connection()
@@ -248,16 +251,16 @@ class Projects:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute('SELECT COUNT(*) FROM projects WHERE user_id = %s', (user_id,))
-        project_count = cursor.fetchall()
+        count = cursor.fetchone()[0]
         cursor.close()
         conn.close()
-        return project_count
+        return count
 
     def update_project_status(project_id):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute('UPDATE projects SET approval = 1 WHERE id = %s', (project_id,))
-        project_count = cursor.fetchall()
+        conn.commit()
         cursor.close()
         conn.close()
 
