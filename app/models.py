@@ -257,10 +257,11 @@ class Projects:
 
 
 class QuestionAnswer:
-    def __init__(self, question, answer, user_id):
+    def __init__(self, question, answer, user_id, project_id = None):
         self.question = question
         self.answer = answer
         self.user_id = user_id
+        self.project_id = project_id
 
     @staticmethod
     def create_table():
@@ -272,8 +273,9 @@ class QuestionAnswer:
                 question TEXT NOT NULL,
                 answer TEXT NOT NULL,
                 user_id INT NOT NULL,
+                project_id INT NOT NULL
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES users(id)
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             )
         ''')
         conn.commit()
@@ -284,9 +286,9 @@ class QuestionAnswer:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO question_answers (question, answer, user_id)
-            VALUES (%s, %s, %s)
-        ''', (self.question, self.answer, self.user_id))
+            INSERT INTO question_answers (question, answer, user_id, project_id)
+            VALUES (%s, %s, %s, %s)
+        ''', (self.question, self.answer, self.user_id, self.project_id))
         conn.commit()
         cursor.close()
         conn.close()
