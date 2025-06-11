@@ -63,8 +63,8 @@
                     </td>
                     <td>{% if project['approval'] == 1 %}
                         <td>
-                        <button class="btn btn-sm btn-outline-primary" onclick="copyCode{{ user.id }}()">Copy Code</button>
-                        <textarea id="code-snippet-{{ user.id }}" style="display:none;">
+                        <button class="btn btn-sm btn-outline-primary" onclick="copyCode{{ project.user_id }}()">Copy Code</button>
+                        <textarea id="code-snippet-{{ project.user_id }}" style="display:none;">
 
 <style>
 #chat-widget {
@@ -243,8 +243,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const chatMessages = document.getElementById("chat-messages");
   const chatCloud = document.getElementById("chat-cloud");
 
-  const userId = "{{ user.id }}";
-  const welcomeMessage = {{ user.WelcomeMessage | tojson }};
+  const userId = "{{ project.user_id }}";
+  const welcomeMessage = {{ project.WelcomeMessage | tojson }};
   let welcomeShown = false;
 
 
@@ -276,7 +276,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function redirectToWhatsApp() {
-    const phone = "{{ user.whatsapp_number }}";
+    const phone = "{{ project.whatsapp_number }}";
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(whatsappMessage)}`;
     window.open(url, "_blank");
   }
@@ -359,7 +359,7 @@ document.getElementById("chat-close").addEventListener("click", function () {
 });
 // Helper functions
 function redirectToWhatsApp() {
-  window.open("https://wa.me/{{ user.whatsapp_number }}", "_blank");
+  window.open("https://wa.me/{{ project.whatsapp_number }}", "_blank");
 }
 
 function showOffers() {
@@ -368,10 +368,10 @@ function showOffers() {
 </script>
                         </textarea>
                         <script>
-                        function copyCode{{ user.id }}() {
-                            const code = document.getElementById("code-snippet-{{ user.id }}").value;
+                        function copyCode{{ project.user_id }}() {
+                            const code = document.getElementById("code-snippet-{{ project.user_id }}").value;
                             navigator.clipboard.writeText(code).then(function() {
-                                alert("Code copied to clipboard for user: {{ user.full_name }}");
+                                alert("Code copied to clipboard for user: {{ project.full_name }}");
                             }, function(err) {
                                 alert("Failed to copy code");
                             });
