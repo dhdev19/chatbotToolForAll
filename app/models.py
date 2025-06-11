@@ -253,6 +253,13 @@ class Projects:
         conn.close()
         return project_count
 
+    def update_project_status(project_id):
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('UPDATE projects SET approval = 1 WHERE id = %s', (project_id,))
+        project_count = cursor.fetchall()
+        cursor.close()
+        conn.close()
 
 
 
