@@ -1,5 +1,5 @@
 from flask import Flask
-from app.models import User, QuestionAnswer
+from app.models import User, QuestionAnswer, Projects
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
@@ -15,6 +15,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 with app.app_context():
     User.create_table()
     QuestionAnswer.create_table()
+    Projects.create_table()
 
 from app.routes import auth, dashboard, chatbot, main, admin
 
