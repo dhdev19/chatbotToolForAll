@@ -75,7 +75,7 @@ def approve_project():
     except Exception as e:
         flash(f"An error occurred: {str(e)}", "danger")
     
-    return redirect(url_for('chatbot.ahow_users'))
+    return redirect(url_for('chatbot.show_users'))
 
 @bp.route('/admin/getUserProjects')
 @admin_required
