@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, redirect, url_for, session, flash, jsonify
-from app.models import User
+from app.models import User, Projects
 import hashlib
 from app.routes.auth import admin_required
 from dotenv import load_dotenv
