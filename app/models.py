@@ -316,6 +316,16 @@ class QuestionAnswer:
         return qa_list
 
     @staticmethod
+    def get_by_user_id_and_projects(user_id):
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('SELECT question_answers.*, projects.project FROM question_answers LEFT JOIN projects ON question_answers.project_id = projects.id WHERE question_answers.user_id = %s AND projects.user_id = %s ORDER BY projects.id', (user_id, user_id))
+        qa_list = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return qa_list
+        
+    @staticmethod
     def get_by_id(qa_id):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
