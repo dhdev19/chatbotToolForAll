@@ -71,10 +71,10 @@
                         {% endif %}
                     </td>
                     <td>
-  <a href="#" data-bs-toggle="modal" data-bs-target="#ProjectsModal{{ user.id }}">
-    {{ user.project_count }}
-  </a>
-</td>
+        <a href="javascript:void(0);" onclick="toggleProjects({{ user.id }})">
+            {{ user.project_count }}
+        </a>
+    </td>
 
 
                     <td>{{ user.WelcomeMessage }}</td>
@@ -404,91 +404,73 @@ function showOffers() {
 </td>
 
                 </tr>
-
-
-                <!-- Modal -->
-<div class="modal fade" id="ProjectsModal{{ user.id }}" tabindex="-1" aria-labelledby="ProjectsModalLabel{{ user.id }}" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="ProjectsModalLabel{{ user.id }}">Projects for {{ user.full_name }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
+<tr id="projects-row-{{ user.id }}" style="display: none;">
+    <td colspan="9">
         {% if user.projects %}
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Project Name</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for project in user.projects %}
-            <tr>
-              <td>{{ project.name }}</td>
-              <td>
-                {% if project.approved %}
-                <span class="badge bg-success">Approved</span>
-                {% else %}
-                <span class="badge bg-warning text-dark">Pending</span>
-                {% endif %}
-              </td>
-              <td>
-                {% if project.approved %}
-                <button class="btn btn-sm btn-danger" onclick="toggleApproval({{ project.id }}, false)">Revoke</button>
-                {% else %}
-                <button class="btn btn-sm btn-success" onclick="toggleApproval({{ project.id }}, true)">Approve</button>
-                {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        {% else %}
-        <p class="text-muted">No projects found for this user.</p>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-</div>
-
+        <table class="table table-bordered table-sm mb-0">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in user.projects %}
+                <tr>
+                    <td>{{ project.name }}</td>
+                    <td>
+                        {% if project.approved %}
+                        <span class="badge bg-success">Approved</span>
+                        {% else %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if project.approved %}
+                        <button class="btn btn-sm btn-danger" onclick="toggleApproval({{ project.id }}, false)">Revoke</button>
+                        {% else %}
+                        <button class="btn btn-sm btn-success" onclick="toggleApproval({{ project.id }}, true)">Approve</button>
+                        {% endif %}
+                    </td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
-    </div>
-</div>
-
-
+        {% else %}
+        <p class="text-muted mb-0">No projects found for this user.</p>
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
 
 <script>
+function toggleProjects(userId) {
+    const row = document.getElementById(`projects-row-${userId}`);
+    row.style.display = row.style.display === "none" ? "table-row" : "none";
+}
+
 function toggleApproval(projectId, approve) {
-  fetch(`/admin/project/${projectId}/approval`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ approve: approve })
-  })
-  .then(response => {
-    if (!response.ok) throw new Error("Network error");
-    return response.json();
-  })
-  .then(data => {
-    alert(data.message);
-    location.reload(); // Refresh to update status
-  })
-  .catch(err => {
-    alert("Error updating approval status.");
-    console.error(err);
-  });
+    fetch(`/admin/project/${projectId}/approval`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ approve: approve })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Network error");
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message);
+        location.reload(); // Optional: Refresh to reflect changes
+    })
+    .catch(err => {
+        alert("Error updating approval status.");
+        console.error(err);
+    });
 }
 </script>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 {% endblock %}
