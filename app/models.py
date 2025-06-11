@@ -16,6 +16,57 @@ db_config = {
 def get_db_connection():
     return mysql.connector.connect(**db_config)
 
+
+class Projects:
+    def __init__(self, user_id, project, usage_count, approval = 0, id=None):
+        self.id = id
+        self.user_id = user_id
+        self.project = project
+        self.usage_count = usage_count
+        self.approval = approval
+
+    def create_table():
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS projects
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                project VARCHAR(120) UNIQUE NOT NULL,
+                usage_count INT DEFAULT 0,
+                approval BOOLEAN DEFAULT FALSE,
+                FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+            )
+        ''')
+
+    def save(self):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO projects (user_id, project)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ''', (self.user_id, self.project))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+    def delete(self):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM projects WHERE id = %s', (self.id,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+    @staticmethod
+    def get_all_projects(user_id):
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM projects WHERE user_id = %s', (user_id,))
+        projects = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return projects
+
 class User:
     def __init__(self, full_name, email, password_hash, whatsapp_number, business_name, WelcomeMessage, secret_key=None, is_admin=False, id=None, offers='Special Offer: Contact us!', popup_text='Chat with us directly and we can help you with your needs.', whatsapp_message='I want to know more about your projects'):
         self.id = id
@@ -257,3 +308,4 @@ class QuestionAnswer:
         conn.commit()
         cursor.close()
         conn.close() 
+
