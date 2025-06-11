@@ -406,16 +406,11 @@ function showOffers() {
                 </tr>
 
 
-
-                <!-- Expandable Project Row -->
-                <tr id="projects-row-{{ user.id }}" class="d-none">
-                    <td colspan="9">
-                        <div id="projects-container-{{ user.id }}">
-                            <em>Loading projects...</em>
-                        </div>
-                    </td>
                 </tr>
-                
+                <!-- This hidden row will show projects -->
+                <tr id="projects-row-{{ user.id }}" class="d-none">
+                    <td colspan="9" id="projects-cell-{{ user.id }}"></td>
+                </tr>
                 
 {% endfor %}
 
