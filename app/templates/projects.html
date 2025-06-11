@@ -243,6 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const chatCloud = document.getElementById("chat-cloud");
 
   const userId = "{{ project['user_id'] }}";
+  const projectId = "{{ project['id'] }}";
   const welcomeMessage = {{ project['WelcomeMessage'] | tojson }};
   let welcomeShown = false;
 
@@ -314,7 +315,7 @@ document.getElementById("chat-close").addEventListener("click", function () {
     fetch("https://chatbottoolforall-l23o.onrender.com/admin/increase_count", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_id: userId })
+      body: JSON.stringify({ user_id: userId , project_id: projectId })
     }).catch(err => console.error("Failed to increase visitor count", err));
   }
 
@@ -339,7 +340,7 @@ document.getElementById("chat-close").addEventListener("click", function () {
       const res = await fetch({{ chatbot_api_url }}, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: message, user_id: userId })
+        body: JSON.stringify({ query: message, user_id: userId , project_id: projectId})
       });
 
       const data = await res.json();
