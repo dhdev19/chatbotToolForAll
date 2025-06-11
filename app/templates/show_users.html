@@ -71,10 +71,10 @@
                         {% endif %}
                     </td>
                     <td>
-        <a href="javascript:void(0);" onclick="toggleProjects({{ user.id }})">
-            {{ user.project_count }}
-        </a>
-    </td>
+                        <a href="javascript:void(0);" onclick="toggleProjects({{ user.id }})">
+                            {{ user.project_count }}
+                        </a>
+                    </td>
 
 
                     <td>{{ user.WelcomeMessage }}</td>
@@ -404,73 +404,83 @@ function showOffers() {
 </td>
 
                 </tr>
-<tr id="projects-row-{{ user.id }}" style="display: none;">
-    <td colspan="9">
-        {% if user.projects %}
-        <table class="table table-bordered table-sm mb-0">
-            <thead>
-                <tr>
-                    <th>Project Name</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for project in user.projects %}
-                <tr>
-                    <td>{{ project.name }}</td>
-                    <td>
-                        {% if project.approved %}
-                        <span class="badge bg-success">Approved</span>
-                        {% else %}
-                        <span class="badge bg-warning text-dark">Pending</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if project.approved %}
-                        <button class="btn btn-sm btn-danger" onclick="toggleApproval({{ project.id }}, false)">Revoke</button>
-                        {% else %}
-                        <button class="btn btn-sm btn-success" onclick="toggleApproval({{ project.id }}, true)">Approve</button>
-                        {% endif %}
+
+
+
+                <!-- Expandable Project Row -->
+                <tr id="projects-row-{{ user.id }}" class="d-none">
+                    <td colspan="9">
+                        <div id="projects-container-{{ user.id }}">
+                            <em>Loading projects...</em>
+                        </div>
                     </td>
                 </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p class="text-muted mb-0">No projects found for this user.</p>
-        {% endif %}
-    </td>
-</tr>
+                
+                
 {% endfor %}
 
+
+</tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
 <script>
 function toggleProjects(userId) {
     const row = document.getElementById(`projects-row-${userId}`);
-    row.style.display = row.style.display === "none" ? "table-row" : "none";
-}
+    const container = document.getElementById(`projects-container-${userId}`);
 
-function toggleApproval(projectId, approve) {
-    fetch(`/admin/project/${projectId}/approval`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ approve: approve })
-    })
-    .then(response => {
-        if (!response.ok) throw new Error("Network error");
-        return response.json();
-    })
-    .then(data => {
-        alert(data.message);
-        location.reload(); // Optional: Refresh to reflect changes
-    })
-    .catch(err => {
-        alert("Error updating approval status.");
-        console.error(err);
-    });
+    if (row.classList.contains('d-none')) {
+        row.classList.remove('d-none');
+
+        if (!container.dataset.loaded) {
+            fetch(`/admin/getUserProjects?user_id=${userId}`)
+                .then(response => response.json())
+                .then(projects => {
+                    if (projects.length === 0) {
+                        container.innerHTML = "<p class='text-muted'>No projects found.</p>";
+                    } else {
+                        let html = `
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Project Name</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+                        projects.forEach(p => {
+                            html += `
+                                <tr>
+                                    <td>${p.name}</td>
+                                    <td>
+                                        ${p.approved 
+                                            ? '<span class="badge bg-success">Approved</span>' 
+                                            : '<span class="badge bg-warning text-dark">Pending</span>'}
+                                    </td>
+                                    <td>
+                                        ${p.approved 
+                                            ? `<a href="/admin/revokeProject?project_id=${p.id}" class="btn btn-sm btn-danger">Revoke</a>`
+                                            : `<a href="/admin/approveProject?project_id=${p.id}" class="btn btn-sm btn-success">Approve</a>`}
+                                    </td>
+                                </tr>`;
+                        });
+                        html += `</tbody></table>`;
+                        container.innerHTML = html;
+                        container.dataset.loaded = "true";
+                    }
+                })
+                .catch(error => {
+                    container.innerHTML = "<p class='text-danger'>Error loading projects.</p>";
+                    console.error(error);
+                });
+        }
+    } else {
+        row.classList.add('d-none');
+    }
 }
 </script>
-
 {% endblock %}
