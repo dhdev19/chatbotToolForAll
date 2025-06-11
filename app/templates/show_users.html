@@ -70,7 +70,12 @@
                         <span class="badge badge-secondary">User</span>
                         {% endif %}
                     </td>
-                    <td data-bs-toggle="modal" data-bs-target="#ProjectsModal{{ user.id }}">{{ user.project_count }}</td>
+                    <td>
+  <a href="#" data-bs-toggle="modal" data-bs-target="#ProjectsModal{{ user.id }}">
+    {{ user.project_count }}
+  </a>
+</td>
+
 
                     <td>{{ user.WelcomeMessage }}</td>
                     <td>
