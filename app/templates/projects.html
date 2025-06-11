@@ -370,7 +370,7 @@ function showOffers() {
                         function copyCode{{ project.user_id }}() {
                             const code = document.getElementById("code-snippet-{{ project['user_id'] }}").value;
                             navigator.clipboard.writeText(code).then(function() {
-                                alert("Code copied to clipboard for user: {{ project['full_name'] }}");
+                                alert("Code copied to clipboard for project: {{ project['project'] }}");
                             }, function(err) {
                                 alert("Failed to copy code");
                             });
