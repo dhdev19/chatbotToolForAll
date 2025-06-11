@@ -69,12 +69,11 @@ def delete_project(project_id):
 @bp.route('/chatbot/add_project', methods=['GET', 'POST'])
 @login_required
 def add_project():
-    
     project_name = request.form.get('project')
     if not project_name:
         flash('Project name is required.', 'danger')
         return redirect(url_for('chatbot.projects'))
-    project = Projects(user_id=session['id'], project=project_name)
+    project = Projects(user_id=session['user_id'], project=project_name)
     try:
         project.save()
         flash('Project added successfully.', 'success')
