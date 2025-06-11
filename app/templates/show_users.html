@@ -71,12 +71,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="#"
-                         class="project-count-link"
-                         data-user-id="{{ user.id }}"
-                         data-user-name="{{ user.full_name }}">
-                        {{ user.project_count or 0 }}
-                      </a>
+                        <a href="#" class="project-count-link" data-user-id="{{ user.id }}" data-user-name="{{ user.username }}">{{ user.project_count }}</a>
                     </td>
 
                     <td>{{ user.WelcomeMessage }}</td>
