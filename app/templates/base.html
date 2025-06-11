@@ -109,6 +109,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'chatbot.projects' %}active{% endif %}" href="{{ url_for('chatbot.projects') }}">
+                            <i class="fas fa-plus-circle"></i> Projects
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'chatbot.view_qa' %}active{% endif %}" href="{{ url_for('chatbot.view_qa') }}">
                             <i class="fas fa-list"></i> View Q&A
                         </a>
