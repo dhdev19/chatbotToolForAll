@@ -60,22 +60,9 @@ def show_sales():
 @bp.route('/admin/approveProject')
 @admin_required
 def approve_project():
-    project_id = request.args.get('project_id')
-    
-    if not project_id:
-        flash("Project ID is required.", "danger")
-        return redirect(url_for('admin.show_users'))
-
-    try:
-        project_id = int(project_id)
-        Project.update_project_status(project_id)
-        flash("Project approved successfully!", "success")
-    except ValueError:
-        flash("Invalid Project ID.", "danger")
-    except Exception as e:
-        flash(f"An error occurred: {str(e)}", "danger")
-    
-    return redirect(url_for('admin.show_users'))
+    pid = request.args.get('project_id', type=int)
+    Projects.update_project_status(pid, approved=False)
+    return ('', 204)
 
 @bp.route('/admin/getUserProjects')
 @admin_required
