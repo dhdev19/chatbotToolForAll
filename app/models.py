@@ -248,6 +248,17 @@ class Projects:
         return projects
 
     @staticmethod
+    def get_all_approved_projects(user_id):
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM projects WHERE user_id = %s AND approval = %s', (user_id,1))
+        projects = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return projects
+
+    
+    @staticmethod
     def get_project_count(user_id):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
