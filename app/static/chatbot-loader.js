@@ -39,7 +39,7 @@
   document.body.appendChild(container);
 
   // Fetch the chatbot embed code
-  fetch(`https://api.dhgenixmedia.ae/get-embed-code/${userId}/${projectId}`)
+  fetch(`https://api.dhgenixmedia.ae/chatbot/embed?project_id=${projectId}&user_id=${userId}`)
     .then(response => {
       if (!response.ok) throw new Error("Failed to fetch embed code");
       return response.text();
