@@ -247,6 +247,17 @@ class Projects:
         conn.close()
         return projects
 
+
+    @staticmethod
+    def get_project(user_id, project_id):
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('SELECT users.full_name, users.email, users.whatsapp_number, users.WelcomeMessage, users.business_name, users.offers, users.popup_text, users.whatsapp_message, projects.* FROM projects LEFT JOIN users ON projects.user_id=users.id WHERE projects.user_id = %s AND projects.id = %s', (user_id, project_id))
+        project = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return project
+
     @staticmethod
     def get_all_approved_projects(user_id):
         conn = get_db_connection()
