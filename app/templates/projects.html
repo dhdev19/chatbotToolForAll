@@ -64,7 +64,7 @@
                     <td>{% if project['approval'] == 1 %}
                          <button class="btn btn-sm btn-outline-primary" onclick="copyCode{{ project['id'] }}()">Copy Code</button>
 <textarea id="code-snippet-{{ project['id'] }}" style="display:none;">
-<script src="https://api.dhgenixmedia.ae/chatbot-loader.js" data-user="{{ project['user_id'] }}" data-project="{{ project['id'] }}"></script>
+<script src="https://api.dhgenixmedia.ae/static/chatbot-loader.js" data-user="{{ project['user_id'] }}" data-project="{{ project['id'] }}"></script>
 </textarea>
 <script>
 function copyCode{{ project['id'] }}() {
