@@ -71,7 +71,7 @@ def projects():
     projects = Projects.get_all_projects(user_id)
     return render_template('projects.html', projects=projects, chatbot_api_url=chatbot_api_url)
 
-@app.route("/chatbot/embed")
+@bp.route("/chatbot/embed")
 def embed_chatbot():
     project_id = request.args.get("project_id")
     user_id = request.args.get("user_id")
