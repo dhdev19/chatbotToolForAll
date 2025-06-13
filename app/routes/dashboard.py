@@ -26,8 +26,8 @@ def chatbot():
 def view_qa():
     return render_template('view_qa.html')
 
-@bp.route('/chatbot/embed')
-def embed_code():
-    if 'user_id' not in session:
-        return redirect(url_for('auth.login'))
-    return render_template('embed_code.html') 
+# @bp.route('/chatbot/embed')
+# def embed_code():
+#     if 'user_id' not in session:
+#         return redirect(url_for('auth.login'))
+#     return render_template('embed_code.html') 
