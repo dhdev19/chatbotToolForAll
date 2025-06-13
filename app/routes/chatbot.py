@@ -71,6 +71,18 @@ def projects():
     projects = Projects.get_all_projects(user_id)
     return render_template('projects.html', projects=projects, chatbot_api_url=chatbot_api_url)
 
+@app.route("/chatbot/embed")
+def embed_chatbot():
+    project_id = request.args.get("project_id")
+    user_id = request.args.get("user_id")
+
+    if not project_id or not user_id:
+        return "Missing project_id or user_id", 400
+    project = Projects.get_all_projects(user_id)
+    return render_template('embed-chatbot.html', project=project, chatbot_api_url=chatbot_api_url)
+
+
+
 @bp.route('/chatbot/delete_project<int:project_id>', methods=['GET', 'POST'])
 @login_required
 def delete_project(project_id):
