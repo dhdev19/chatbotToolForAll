@@ -26,13 +26,28 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# def admin_required(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if 'user_id' not in session or not session.get('is_admin'):
+#             return redirect(url_for('auth.admin_login'))
+#         return f(*args, **kwargs)
+#     return decorated_function
+
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'user_id' not in session or not session.get('is_admin'):
+        user_id = session.get('user_id')
+        if not user_id:
+            return redirect(url_for('auth.login'))
+        
+        user = User.get_by_id(user_id)
+        if not user or not user.is_admin:
             return redirect(url_for('auth.admin_login'))
+
         return f(*args, **kwargs)
     return decorated_function
+
 
 @bp.route('/login', methods=['GET', 'POST'])
 @no_cache
