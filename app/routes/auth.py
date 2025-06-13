@@ -65,7 +65,9 @@ def login():
             session['full_name'] = user['full_name']
             return redirect(url_for('dashboard.index'))
         flash('Invalid email or password')
-    return render_template('login.html')
+    # return render_template('login.html')
+    return redirect("https://dhgenixmedia.ae/chatbot-client-login.php")
+
 
 @bp.route('/admin/login', methods=['GET', 'POST'])
 @no_cache
@@ -83,7 +85,10 @@ def admin_login():
             session['full_name'] = user['full_name']
             return redirect(url_for('admin.dashboard'))
         flash('Invalid admin credentials')
-    return render_template('admin_login.html')
+    # return render_template('admin_login.html')
+    return redirect("https://dhgenixmedia.ae/admin-login.php")
+
+
 
 @bp.route('/register', methods=['GET', 'POST'])
 @no_cache
