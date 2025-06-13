@@ -79,7 +79,7 @@ def embed_chatbot():
     if not project_id or not user_id:
         return "Missing project_id or user_id", 400
     project = Projects.get_project(user_id, project_id)
-    return render_template('embed-chatbot.html', project=project, chatbot_api_url=chatbot_api_url)
+    return render_template('embed_code.html', project=project, chatbot_api_url=chatbot_api_url)
 
 
 
