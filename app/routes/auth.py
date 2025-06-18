@@ -52,20 +52,21 @@ def admin_required(f):
 @bp.route('/login', methods=['GET', 'POST'])
 @no_cache
 def login():
-    if 'user_id' in session:
-        return redirect(url_for('dashboard.index'))
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
         user = User.get_by_email(email)
-        if user and user['is_admin'] == False and user['password_hash'] == hashlib.sha256(password.encode()).hexdigest():
-            session.clear()
-            session['user_id'] = user['id']
-            session['is_admin'] = user['is_admin']
-            session['email'] = user['email']
-            session['full_name'] = user['full_name']
-            return redirect(url_for('dashboard.index'))
-        flash('Invalid email or password')
+        if user:    
+            if 'user_id' in session and session['user_id'] == user['id']:
+                return redirect(url_for('dashboard.index'))
+            if user['is_admin'] == False and user['password_hash'] == hashlib.sha256(password.encode()).hexdigest():
+                session.clear()
+                session['user_id'] = user['id']
+                session['is_admin'] = user['is_admin']
+                session['email'] = user['email']
+                session['full_name'] = user['full_name']
+                return redirect(url_for('dashboard.index'))
+            flash('Invalid email or password')
     # return render_template('login.html')
     return redirect("https://dhgenixmedia.ae/chatbot-client-login.php")
 
@@ -73,20 +74,22 @@ def login():
 @bp.route('/admin/login', methods=['GET', 'POST'])
 @no_cache
 def admin_login():
-    if 'user_id' in session and session.get('is_admin'):
-        return redirect(url_for('admin.dashboard'))
+    
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
         user = User.get_by_email(email)
-        if user and user['is_admin'] and user['password_hash'] == hashlib.sha256(password.encode()).hexdigest():
-            session.clear()
-            session['user_id'] = user['id']
-            session['is_admin'] = True
-            session['email'] = user['email']
-            session['full_name'] = user['full_name']
-            return redirect(url_for('admin.dashboard'))
-        flash('Invalid admin credentials')
+        if user:
+            if 'user_id' in session and session.get('is_admin'):
+                return redirect(url_for('admin.dashboard'))
+            if user['is_admin'] and user['password_hash'] == hashlib.sha256(password.encode()).hexdigest():
+                session.clear()
+                session['user_id'] = user['id']
+                session['is_admin'] = True
+                session['email'] = user['email']
+                session['full_name'] = user['full_name']
+                return redirect(url_for('admin.dashboard'))
+            flash('Invalid admin credentials')
     # return render_template('admin_login.html')
     return redirect("https://dhgenixmedia.ae/admin-login.php")
 
