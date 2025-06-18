@@ -59,6 +59,7 @@ def login():
         password = request.form.get('password')
         user = User.get_by_email(email)
         if user and user['is_admin'] == False and user['password_hash'] == hashlib.sha256(password.encode()).hexdigest():
+            session.clear()
             session['user_id'] = user['id']
             session['is_admin'] = user['is_admin']
             session['email'] = user['email']
@@ -79,6 +80,7 @@ def admin_login():
         password = request.form.get('password')
         user = User.get_by_email(email)
         if user and user['is_admin'] and user['password_hash'] == hashlib.sha256(password.encode()).hexdigest():
+            session.clear()
             session['user_id'] = user['id']
             session['is_admin'] = True
             session['email'] = user['email']
