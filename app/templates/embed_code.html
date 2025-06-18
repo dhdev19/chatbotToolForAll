@@ -186,7 +186,7 @@ document.addEventListener("ChatbotEmbedReady", function () {
 
   let offersText = "";
   let whatsappMessage = "";
-  let popupText = "";
+  // let popupText = "";
 
   fetch("https://chatbottoolforall-l23o.onrender.com/chatbot/get-live-info", {
     method: "POST",
@@ -197,8 +197,8 @@ document.addEventListener("ChatbotEmbedReady", function () {
   .then(data => {
     offersText = data.offers || "🎉 No offers available at the moment.";
     whatsappMessage = data.whatsapp_message || "Let's chat on WhatsApp!";
-    popupText = data.popup_text || "Chat with us directly and we can help you with your needs.";
-    document.querySelector("#whatsapp-popup p").innerText = popupText;
+    // popupText = data.popup_text || "Chat with us directly and we can help you with your needs.";
+    // document.querySelector("#whatsapp-popup p").innerText = popupText;
   })
   .catch(err => console.error("Failed to fetch live info", err));
 
@@ -225,9 +225,9 @@ document.addEventListener("ChatbotEmbedReady", function () {
     chatWidget.style.display = "none";
   });
 
-  setTimeout(() => {
-    document.getElementById("whatsapp-popup").style.display = "block";
-  }, 10000);
+  // setTimeout(() => {
+  //   document.getElementById("whatsapp-popup").style.display = "block";
+  // }, 10000);
 
   chatToggle.addEventListener("click", function () {
     const isHidden = chatWidget.style.display === "none" || chatWidget.style.display === "";
