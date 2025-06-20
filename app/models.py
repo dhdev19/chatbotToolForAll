@@ -81,6 +81,16 @@ class User:
         return user
 
     @staticmethod
+    def get_bot_name(user_id):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT offers FROM users WHERE id = %s', (user_id,))
+        bot_name = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return bot_name[0]
+
+    @staticmethod
     def get_all_users():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
