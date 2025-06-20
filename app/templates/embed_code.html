@@ -81,7 +81,7 @@
       color: white;
     }
     #chat-buttons button:first-child {
-      background: #555;
+      background: #FFD700;
     }
     #chat-buttons button:last-child {
       background: #25D366;
@@ -152,8 +152,8 @@
   <div id="chat-header">AI Assistant <span id="chat-close">×</span></div>
   <div id="chat-messages"></div>
   <div id="chat-buttons">
-    <button onclick="showOffers()">Offers</button>
-    <button onclick="redirectToWhatsApp()">WhatsApp</button>
+    <button onclick="showOffers()">Phone</button>
+    <button onclick="redirectToWhatsApp()">Offers</button>
   </div>
   <div id="chat-input">
     <input id="user-input" type="text" placeholder="Ask something...">
@@ -203,7 +203,9 @@ document.addEventListener("ChatbotEmbedReady", function () {
   .catch(err => console.error("Failed to fetch live info", err));
 
   window.showOffers = function() {
-    alert(offersText);
+    // alert(offersText);
+    const phoneNumber = "{{ project['whatsapp_number'] }}"; // Example: "1234567890"
+    window.location.href = `tel:${phoneNumber}`;
   }
 
   window.redirectToWhatsApp = function() {
