@@ -47,6 +47,10 @@
                     <th>Projects</th>
                     <th>Approval Status</th>
                     <th>Code</th>
+                    <th>Button 1</th>
+                    <th>Button 2</th>
+                    <th>Button 3</th>
+                    <th>Button 4</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -81,6 +85,10 @@ function copyCode{{ project['id'] }}() {
                     
                     
                     </td>
+                    <td> {{ project["popup1"] }}</td>
+                    <td> {{ project["popup2"] }}</td>
+                    <td> {{ project["popup3"] }}</td>
+                    <td> {{ project["popup4"] }}</td>
                     <td class="action-buttons">
                         <form method="POST" action="{{ url_for('chatbot.delete_project', project_id=project['id']) }}" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this project?')">
