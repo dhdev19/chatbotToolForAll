@@ -93,7 +93,12 @@ textarea.form-control {
     <!-- Editable Offers -->
     <form method="POST" action="{{ url_for('chatbot.edit_offers') }}" class="mb-4">
         <div class="form-group">
-            <label for="offers">Offers</label>
+
+
+
+            
+<!--             initially offers, changed to bot name -->
+            <label for="offers">Bot Name</label>
             <textarea class="form-control" name="offers" rows="3">{{ user.offers }}</textarea>
         </div>
         <button type="submit" class="btn btn-primary">Update Offers</button>
