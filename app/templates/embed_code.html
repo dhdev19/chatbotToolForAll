@@ -167,6 +167,26 @@
 
 
 
+
+    #popup-buttons button {
+  flex: 1 1 40%;
+  padding: 8px 10px;
+  font-size: 13px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+#popup-buttons button:hover {
+  background: #0056b3;
+}
+
+
+
+    
     
   </style>
 </head>
@@ -175,6 +195,13 @@
 <div id="chat-widget">
   <div id="chat-header">AI Assistant <span id="chat-close">×</span></div>
   <div id="chat-messages"></div>
+
+
+  
+  <div id="popup-buttons" style="display: none; flex-wrap: wrap; padding: 10px; gap: 6px;">
+  <!-- Buttons will be injected dynamically -->
+</div>
+
   <div id="chat-buttons">
     <button onclick="showOffers()">Phone</button>
     <button onclick="redirectToWhatsApp()">Offers</button>
@@ -213,6 +240,10 @@ document.addEventListener("ChatbotEmbedReady", function () {
   const projectId = "{{ project['id'] }}";
   const welcomeMessage = {{ project['WelcomeMessage'] | tojson }};
   let welcomeShown = false;
+  const popup1 = "{{ project['popup1'] }}";
+  const popup2 = "{{ project['popup2'] }}";
+  const popup3 = "{{ project['popup3'] }}";
+  const popup4 = "{{ project['popup4'] }}";
 
   let offersText = "";
   let whatsappMessage = "";
@@ -269,6 +300,17 @@ document.addEventListener("ChatbotEmbedReady", function () {
     if (isHidden && !welcomeShown && welcomeMessage) {
       appendMessage(botName, welcomeMessage);
       welcomeShown = true;
+      const popupButtons = document.getElementById("popup-buttons");
+      popupButtons.innerHTML = "";
+
+      [popup1, popup2, popup3, popup4].forEach(text => {
+      const btn = document.createElement("button");
+      btn.innerText = text;
+      btn.onclick = () => sendMessageFromButton(text);
+      popupButtons.appendChild(btn);
+      });
+
+      popupButtons.style.display = "flex";
 
       fetch("https://chatbottoolforall-l23o.onrender.com/admin/increase_count", {
         method: "POST",
@@ -320,6 +362,28 @@ document.addEventListener("ChatbotEmbedReady", function () {
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 });
+
+
+  function sendMessageFromButton(text) {
+  appendMessage("You", text);
+
+  fetch("{{ chatbot_api_url }}", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query: text, user_id: userId, project_id: projectId })
+  })
+  .then(res => res.json())
+  .then(data => {
+    appendMessage(botName, data.response);
+  })
+  .catch(() => {
+    appendMessage(botName, "Sorry, could not connect to the chatbot.");
+  });
+}
+
+
+
+  
 </script>
 </body>
 </html>
