@@ -244,7 +244,8 @@ def get_info():
         return jsonify({'error': 'User not found'}), 404
 
     return jsonify({
-        'offers': user.offers,
+        # 'offers': user.offers,
+        'bot_name' : user.offers,
         'whatsapp_message': user.whatsapp_message,
         'popup_text': user.popup_text
     })
