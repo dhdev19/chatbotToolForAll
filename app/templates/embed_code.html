@@ -162,7 +162,7 @@
 </div>
 
 <div id="chat-toggle">💬</div>
-<div id="chat-cloud">Hi, I'm Alv. Need help?</div>
+<div id="chat-cloud">Hi, Need assistance?</div>
 
 <!-- <div id="whatsapp-popup">
   <div id="close-popup" onclick="document.getElementById('whatsapp-popup').style.display='none'">&times;</div>
@@ -195,7 +195,7 @@ document.addEventListener("ChatbotEmbedReady", function () {
   })
   .then(res => res.json())
   .then(data => {
-    offersText = data.offers || "🎉 No offers available at the moment.";
+    botName = data.bot_name || "Alv";
     whatsappMessage = data.whatsapp_message || "Let's chat on WhatsApp!";
     // popupText = data.popup_text || "Chat with us directly and we can help you with your needs.";
     // document.querySelector("#whatsapp-popup p").innerText = popupText;
@@ -217,7 +217,7 @@ document.addEventListener("ChatbotEmbedReady", function () {
   if (!sessionStorage.getItem("alviVoicePlayed")) {
     const voices = window.speechSynthesis.getVoices();
     const femaleVoice = voices.find(voice => voice.name.toLowerCase().includes("female") || voice.name.toLowerCase().includes("google") || voice.gender === "female") || voices[0];
-    const msg = new SpeechSynthesisUtterance("Hi, I am Alv, your personal assistant.");
+    const msg = new SpeechSynthesisUtterance("Hi, I am "+ botName + ", your personal assistant.");
     msg.voice = femaleVoice;
     window.speechSynthesis.speak(msg);
     sessionStorage.setItem("alviVoicePlayed", "true");
@@ -236,7 +236,7 @@ document.addEventListener("ChatbotEmbedReady", function () {
     chatWidget.style.display = isHidden ? "flex" : "none";
 
     if (isHidden && !welcomeShown && welcomeMessage) {
-      appendMessage("Alv", welcomeMessage);
+      appendMessage(botName, welcomeMessage);
       welcomeShown = true;
 
       fetch("https://chatbottoolforall-l23o.onrender.com/admin/increase_count", {
@@ -271,15 +271,20 @@ document.addEventListener("ChatbotEmbedReady", function () {
       });
 
       const data = await res.json();
-      appendMessage("Alv", data.response);
+      appendMessage(botName, data.response);
     } catch (err) {
-      appendMessage("Alv", "Sorry, could not connect to the chatbot.");
+      appendMessage(botName, "Sorry, could not connect to the chatbot.");
     }
   }
 
   function appendMessage(sender, text) {
     const msg = document.createElement("div");
+    if (sender === "You") {
     msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
+    } else {
+    msg.innerHTML = `<strong style="color: red;">${sender}:</strong> <span style="color: red;">${text}</span>`;
+    }
+    // msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
     chatMessages.appendChild(msg);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
