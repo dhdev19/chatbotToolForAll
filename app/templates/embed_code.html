@@ -280,12 +280,12 @@ document.addEventListener("ChatbotEmbedReady", function () {
 
   function appendMessage(sender, text) {
     const msg = document.createElement("div");
-    if (sender === "You") {
-    msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
-    } else {
-    msg.innerHTML = `<strong style="color: red;">${sender}:</strong> <span style="color: red;">${text}</span>`;
-    }
+    // if (sender === "You") {
     // msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
+    // } else {
+    // msg.innerHTML = `<strong style="color: red;">${sender}:</strong> <span style="color: red;">${text}</span>`;
+    // }
+    msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
     chatMessages.appendChild(msg);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
