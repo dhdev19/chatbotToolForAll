@@ -361,25 +361,11 @@ document.addEventListener("ChatbotEmbedReady", function () {
     chatMessages.appendChild(msg);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
-});
 
-
-  
 
   function sendMessageFromButton(text) {
 
-    function appendMessage(sender, text) {
-    const msg = document.createElement("div");
-    // if (sender === "You") {
-    // msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
-    // } else {
-    // msg.innerHTML = `<strong style="color: red;">${sender}:</strong> <span style="color: red;">${text}</span>`;
-    // }
-    msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
-    chatMessages.appendChild(msg);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-});
+    
   appendMessage("You", text);
 
   fetch("{{ chatbot_api_url }}", {
@@ -397,6 +383,13 @@ document.addEventListener("ChatbotEmbedReady", function () {
   });
 }
 
+  
+});
+
+
+  
+
+  
 
 
 
