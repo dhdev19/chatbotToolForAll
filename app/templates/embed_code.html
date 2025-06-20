@@ -364,6 +364,8 @@ document.addEventListener("ChatbotEmbedReady", function () {
 });
 
 
+  
+
   function sendMessageFromButton(text) {
   appendMessage("You", text);
 
@@ -376,10 +378,12 @@ document.addEventListener("ChatbotEmbedReady", function () {
   .then(data => {
     appendMessage(botName, data.response);
   })
-  .catch(() => {
+  .catch(err => {
     appendMessage(botName, "Sorry, could not connect to the chatbot.");
+    console.error("Chatbot request failed", err);
   });
 }
+
 
 
 
