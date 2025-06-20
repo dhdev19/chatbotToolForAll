@@ -347,8 +347,8 @@ if (!popupButtons) {
   btn.style.borderRadius = "6px";
   btn.style.cursor = "pointer";
   btn.style.transition = "background 0.2s ease-in-out";
-  btn.onmouseover = () => btn.style.background = "#0056b3";
-  btn.onmouseout = () => btn.style.background = "#007bff";
+  btn.onmouseover = () => btn.style.background = "#fff";
+  btn.onmouseout = () => btn.style.background = "#fff";
   btn.onclick = () => sendMessageFromButton(text);
   popupButtons.appendChild(btn);
 });
