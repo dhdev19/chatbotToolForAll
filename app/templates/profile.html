@@ -81,6 +81,24 @@ textarea.form-control {
         </div>
     </div>
 
+
+
+    <form method="POST" action="{{ url_for('chatbot.#') }}" class="mb-4">
+        <div class="form-group">
+            <label for="whatsapp_message">Popup Button Texts</label>
+            <input type="text" class="form-control" name="popup_button1" rows="3" value="{{ projects.popup1 }}">
+            <input type="text" class="form-control" name="popup_button2" rows="3" value="{{ projects.popup2 }}">
+            <input type="text" class="form-control" name="popup_button3" rows="3" value="{{ projects.popup3 }}">
+            <input type="text" class="form-control" name="popup_button4" rows="3" value="{{ projects.popup4 }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Update Button Text</button>
+    </form>
+
+
+
+
+
+    
     <!-- Editable WhatsApp Message -->
     <form method="POST" action="{{ url_for('chatbot.edit_whatsapp_message') }}" class="mb-4">
         <div class="form-group">
