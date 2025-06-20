@@ -197,16 +197,13 @@
   <div id="chat-messages">
 
 
-    <div id="popup-buttons" style="display: none; flex-wrap: wrap; padding: 10px; gap: 6px;">
+<!--     <div id="popup-buttons" style="display: none; flex-wrap: wrap; padding: 10px; gap: 6px;">
   <!-- Buttons will be injected dynamically -->
-</div>
+</div> -->
   </div>
 
 
   
-  <div id="popup-buttons" style="display: none; flex-wrap: wrap; padding: 10px; gap: 6px;">
-  <!-- Buttons will be injected dynamically -->
-</div>
 
   <div id="chat-buttons">
     <button onclick="showOffers()">Phone</button>
@@ -219,7 +216,7 @@
 
   
     <div id="chat-trademark">
-    <a href="https://digitalhomeez.in/" target="_blank">© Powered by Alv.ai</a>
+    <a href="https://digitalhomeez.in/chatbot-tool.php" target="_blank">© Powered by Alv.ai</a>
   </div>
 
 </div>
@@ -306,18 +303,57 @@ document.addEventListener("ChatbotEmbedReady", function () {
     if (isHidden && !welcomeShown && welcomeMessage) {
       appendMessage(botName, welcomeMessage);
       welcomeShown = true;
-      const popupButtons = document.getElementById("popup-buttons");
-      popupButtons.innerHTML = "";
+      // const popupButtons = document.getElementById("popup-buttons");
+      // popupButtons.innerHTML = "";
 
-      [popup1, popup2, popup3, popup4].forEach(text => {
-      const btn = document.createElement("button");
-      btn.innerText = text;
-      btn.onclick = () => sendMessageFromButton(text);
-      popupButtons.appendChild(btn);
-      });
+      // [popup1, popup2, popup3, popup4].forEach(text => {
+      // const btn = document.createElement("button");
+      // btn.innerText = text;
+      // btn.onclick = () => sendMessageFromButton(text);
+      // popupButtons.appendChild(btn);
+      // });
 
-      popupButtons.style.display = "flex";
+      // popupButtons.style.display = "flex";
 
+
+
+      let popupButtons = document.getElementById("popup-buttons");
+
+// If it doesn't exist, create and append it
+if (!popupButtons) {
+  popupButtons = document.createElement("div");
+  popupButtons.id = "popup-buttons";
+  popupButtons.style.display = "flex";
+  popupButtons.style.flexWrap = "wrap";
+  popupButtons.style.padding = "10px";
+  popupButtons.style.gap = "6px";
+
+  document.getElementById("chat-messages").appendChild(popupButtons);
+} else {
+  popupButtons.innerHTML = "";
+}
+
+[popup1, popup2, popup3, popup4].forEach(text => {
+  const btn = document.createElement("button");
+  btn.innerText = text;
+  btn.style.flex = "1 1 40%";
+  btn.style.padding = "8px 10px";
+  btn.style.fontSize = "13px";
+  btn.style.background = "#007bff";
+  btn.style.color = "white";
+  btn.style.border = "none";
+  btn.style.borderRadius = "6px";
+  btn.style.cursor = "pointer";
+  btn.style.transition = "background 0.2s ease-in-out";
+  btn.onmouseover = () => btn.style.background = "#0056b3";
+  btn.onmouseout = () => btn.style.background = "#007bff";
+  btn.onclick = () => sendMessageFromButton(text);
+  popupButtons.appendChild(btn);
+});
+
+
+
+      
       fetch("https://chatbottoolforall-l23o.onrender.com/admin/increase_count", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
