@@ -82,7 +82,8 @@ def embed_chatbot():
     if not project_list:
         return "Project not found", 404
     project = project_list[0]
-    return render_template('embed_code.html', project=project, chatbot_api_url=chatbot_api_url)
+    bot_name = User.get_bot_name(user_id)
+    return render_template('embed_code.html', project=project, bot_name = bot_name, chatbot_api_url=chatbot_api_url)
 
 
 
