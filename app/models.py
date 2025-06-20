@@ -17,7 +17,6 @@ def get_db_connection():
     return mysql.connector.connect(**db_config)
 
 
-
 class User:
     def __init__(self, full_name, email, password_hash, whatsapp_number, business_name, WelcomeMessage, secret_key=None, is_admin=False, id=None, offers='Special Offer: Contact us!', popup_text='Chat with us directly and we can help you with your needs.', whatsapp_message='I want to know more about your projects'):
         self.id = id
@@ -203,12 +202,16 @@ class User:
         return None
 
 class Projects:
-    def __init__(self, user_id, project, usage_count = 0, approval = 0, id=None):
+    def __init__(self, user_id, project, usage_count = 0, approval = 0, id=None, popup1="Location", popup2="Amenities", popup3="Configuration", popup4="Offers"):
         self.id = id
         self.user_id = user_id
         self.project = project
         self.usage_count = usage_count
         self.approval = approval
+        self.popup1 = popup1
+        self.popup2 = popup2
+        self.popup3 = popup3
+        self.popup4 = popup4
 
     def create_table():
         conn = get_db_connection()
@@ -220,6 +223,10 @@ class Projects:
                 usage_count INT DEFAULT 0,
                 approval BOOLEAN DEFAULT FALSE,
                 user_id INT,
+                popup1 TEXT DEFAULT 'Location',
+                popup2 TEXT DEFAULT 'Amenities',
+                popup3 TEXT DEFAULT 'Configuration',
+                popup4 TEXT DEFAULT 'Offers',
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             )
         ''')
