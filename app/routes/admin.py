@@ -92,3 +92,17 @@ def increase_count():
     user.update_visitor_count()
 
     return jsonify({'message': 'Visitor count increased'}), 200
+
+
+@bp.route('/admin/increase_btn_count', methods=['POST'])
+def increase_count():
+    user_id = request.json.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'User ID missing'}), 400
+
+    user = User.get_by_id(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    user.update_btn_count()
+
+    return jsonify({'message': 'Visitor count increased'}), 200
