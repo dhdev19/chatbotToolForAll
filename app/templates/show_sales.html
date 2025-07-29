@@ -83,6 +83,7 @@
                             <th>Created At</th>
                             <th>Project Count</th>
                             <th>Chatbot Visitor Count</th>
+                            <th>Whatsapp Button Click</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,6 +94,7 @@
                             <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                             <td>{{ user.project_count }}</td>
                             <td>{{ user.visitor_count }}</td>
+                            <td>{{ user.whatsapp_clicks }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
