@@ -271,6 +271,11 @@ document.addEventListener("ChatbotEmbedReady", function () {
 
   window.showOffers = function() {
     // alert(offersText);
+    fetch("https://chatbottoolforall-l23o.onrender.com/admin/increase_btn_count", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: userId })
+  }).catch(err => console.error("Failed to increase Phone click count", err));
     const phoneNumber = "{{ project['whatsapp_number'] }}"; // Example: "1234567890"
     window.location.href = `tel:${phoneNumber}`;
   }
@@ -278,6 +283,11 @@ document.addEventListener("ChatbotEmbedReady", function () {
   window.redirectToWhatsApp = function() {
     const phone = "{{ project['whatsapp_number'] }}";
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(whatsappMessage)}`;
+    fetch("https://chatbottoolforall-l23o.onrender.com/admin/increase_btn_count", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: userId })
+  }).catch(err => console.error("Failed to increase WhatsApp click count", err));
     window.open(url, "_blank");
   }
 
