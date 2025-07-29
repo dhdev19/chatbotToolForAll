@@ -130,6 +130,18 @@ class User:
         cursor.close()
         conn.close()
 
+    def update_btn_count(self):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE users
+            SET whatsapp_clicks = COALESCE(whatsapp_clicks, 0) + 1
+            WHERE id = %s
+        ''', (self.id,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
 
 
 
