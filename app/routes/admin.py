@@ -95,7 +95,7 @@ def increase_count():
 
 
 @bp.route('/admin/increase_btn_count', methods=['POST'])
-def increase_count():
+def increase_btn_count():
     user_id = request.json.get('user_id')
     if not user_id:
         return jsonify({'error': 'User ID missing'}), 400
