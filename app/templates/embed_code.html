@@ -255,7 +255,7 @@ document.addEventListener("ChatbotEmbedReady", function () {
   // let popupText = "";
   let botName = "{{ bot_name }}";
 
-  fetch("https://chatbottoolforall-l23o.onrender.com/chatbot/get-live-info", {
+  fetch("https://chatbot.dhgenixmedia.ae/chatbot/get-live-info", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_id: userId })
@@ -271,7 +271,7 @@ document.addEventListener("ChatbotEmbedReady", function () {
 
   window.showOffers = function() {
     // alert(offersText);
-    fetch("https://chatbottoolforall-l23o.onrender.com/admin/increase_btn_count", {
+    fetch("https://chatbot.dhgenixmedia.ae/admin/increase_btn_count", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_id: userId })
@@ -283,7 +283,7 @@ document.addEventListener("ChatbotEmbedReady", function () {
   window.redirectToWhatsApp = function() {
     const phone = "{{ project['whatsapp_number'] }}";
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(whatsappMessage)}`;
-    fetch("https://chatbottoolforall-l23o.onrender.com/admin/increase_btn_count", {
+    fetch("https://chatbot.dhgenixmedia.ae/admin/increase_btn_count", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_id: userId })
@@ -366,7 +366,7 @@ if (!popupButtons) {
 
 
       
-      fetch("https://chatbottoolforall-l23o.onrender.com/admin/increase_count", {
+      fetch("https://chatbot.dhgenixmedia.ae/admin/increase_count", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: userId , project_id: projectId })
