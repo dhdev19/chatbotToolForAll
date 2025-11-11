@@ -9,7 +9,7 @@ load_dotenv()
 db_config = {
     'host': os.getenv('HOST'),
     #'port': os.getenv('DB_PORT'),
-    'user': os.getenv('USER'),
+    'user': os.getenv('DB_USER'),
     'password': os.getenv('PASSWORD'),
     'database': os.getenv('DATABASE')
 }
