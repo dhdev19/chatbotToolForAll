@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let whatsappMessage = "";
   let popupText = "";
 
-  fetch("https://chatbottoolforall-l23o.onrender.com/chatbot/get-live-info", {
+  fetch("https://chatbot.dhgenixmedia.ae/chatbot/get-live-info", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_id: userId })
@@ -237,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
       appendMessage("Alv", welcomeMessage);
       welcomeShown = true;
 
-      fetch("https://chatbottoolforall-l23o.onrender.com/admin/increase_count", {
+      fetch("https://chatbot.dhgenixmedia.ae/admin/increase_count", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: userId , project_id: projectId })
