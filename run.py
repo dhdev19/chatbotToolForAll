@@ -3,7 +3,12 @@ from dotenv import load_dotenv
 
 # ✅ Load environment variables from .env once
 load_dotenv()
-
+print("Loaded environment variables:")
+for key, value in os.environ.items():
+    if key in ['SECRET_KEY', 'DB_PASS']:  # hide sensitive info
+        print(f"{key}=********")
+    elif key.startswith(('FLASK_', 'APP_', 'DB_', 'PORT', 'DEBUG')):
+        print(f"{key}={value}")
 from app import app  # Import after .env is loaded (so app can use env vars if needed)
 
 if __name__ == '__main__':
