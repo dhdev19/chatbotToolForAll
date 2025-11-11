@@ -14,9 +14,7 @@ db_config = {
     'database': os.getenv('DATABASE')
 }
 
-print("Loaded DB Config:")
-for key, value in db_config.items():
-    print(f"{key}: {value}")
+
 
 
 def get_db_connection():
