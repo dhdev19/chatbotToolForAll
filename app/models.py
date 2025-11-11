@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv() 
 # MySQL connection configuration
+
 db_config = {
     'host': os.getenv('HOST'),
     #'port': os.getenv('DB_PORT'),
@@ -12,6 +13,11 @@ db_config = {
     'password': os.getenv('PASSWORD'),
     'database': os.getenv('DATABASE')
 }
+
+print("Loaded DB Config:")
+for key, value in db_config.items():
+    print(f"{key}: {value}")
+
 
 def get_db_connection():
     return mysql.connector.connect(**db_config)
