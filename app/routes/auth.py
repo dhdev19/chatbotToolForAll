@@ -106,11 +106,65 @@ def register():
         password = request.form.get('password')
         whatsapp_number = request.form.get('whatsapp_number')
         business_name = request.form.get('business_name')
+
+        if not all([full_name, email, password, whatsapp_number, business_name]):
+            flash('All fields are required.', 'danger')
+            return render_template('register.html')
+
+        existing = User.get_by_email(email)
+        if existing:
+            flash('Email is already registered. Please login.', 'warning')
+            return redirect(url_for('auth.login'))
+
         password_hash = hashlib.sha256(password.encode()).hexdigest()
-        user = User(full_name, email, password_hash, whatsapp_number, business_name)
+        default_welcome = 'Welcome to our chatbot!'
+        user = User(full_name, email, password_hash, whatsapp_number, business_name, default_welcome)
         user.save()
         flash('Registration successful. Please login.')
         return redirect(url_for('auth.login'))
+    return render_template('register.html')
+
+
+@bp.route('/client/register', methods=['GET', 'POST'])
+@no_cache
+def client_register():
+    if 'user_id' in session:
+        return redirect(url_for('dashboard.index'))
+
+    if request.method == 'POST':
+        full_name = request.form.get('full_name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        whatsapp_number = request.form.get('whatsapp_number')
+        business_name = request.form.get('business_name')
+
+        if not all([full_name, email, password, whatsapp_number, business_name]):
+            flash('All fields are required.', 'danger')
+            return render_template('register.html')
+
+        existing = User.get_by_email(email)
+        if existing:
+            flash('Email is already registered. Please login.', 'warning')
+            return redirect(url_for('auth.login'))
+
+        password_hash = hashlib.sha256(password.encode()).hexdigest()
+        default_welcome = 'Welcome to our chatbot!'
+        user = User(full_name, email, password_hash, whatsapp_number, business_name, default_welcome)
+        user.save()
+
+        # Auto-login new client and redirect to dashboard
+        created = User.get_by_email(email)
+        if created:
+            session.clear()
+            session['user_id'] = created['id']
+            session['is_admin'] = created.get('is_admin', False)
+            session['email'] = created['email']
+            session['full_name'] = created['full_name']
+            return redirect(url_for('dashboard.index'))
+
+        flash('Registration completed, but automatic login failed. Please login manually.', 'warning')
+        return redirect(url_for('auth.login'))
+
     return render_template('register.html')
 
 @bp.route('/logout')
