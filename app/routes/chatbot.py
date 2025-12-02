@@ -129,6 +129,12 @@ def verify_payment():
 
     try:
         Projects.update_payment_status(project_id, "SUCCESS")
+    except Exception as e:
+        print(f"Error updating payment status: {e}")
+        return jsonify({"error": "Payment verified but failed to update status."}), 500
+
+    # Log payment details, but don't fail the response if logging fails
+    try:
         ProjectPayment.log_success(
             project_id=project_id,
             user_id=user_id,
@@ -139,8 +145,7 @@ def verify_payment():
             currency=razorpay_currency,
         )
     except Exception as e:
-        print(f"Error updating payment status: {e}")
-        return jsonify({"error": "Payment verified but failed to update status."}), 500
+        print(f"Error logging payment details: {e}")
 
     return jsonify({"success": True})
 

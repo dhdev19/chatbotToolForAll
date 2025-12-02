@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 from flask import Flask
-from app.models import User, QuestionAnswer, Projects
+from app.models import User, QuestionAnswer, Projects, ProjectPayment
 from flask_cors import CORS
 
 
@@ -18,6 +18,7 @@ with app.app_context():
     User.create_table()
     QuestionAnswer.create_table()
     Projects.create_table()
+    ProjectPayment.create_table()
 
 from app.routes import auth, dashboard, chatbot, main, admin
 

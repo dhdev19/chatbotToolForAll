@@ -57,7 +57,7 @@
             </thead>
             <tbody>
                 {% for project in projects %}
-                <tr>
+                <tr data-project-id="{{ project['id'] }}" data-user-id="{{ project['user_id'] }}">
                     <td>{{ project['project'] }}</td>
                     <td>
                         {% if project['approval'] == 1 %}
@@ -66,7 +66,7 @@
                             <span class="badge bg-danger">Pending</span>
                         {% endif %}
                     </td>
-                    <td>
+                    <td data-payment-status>
                         {% if project['approval'] == 1 and project['payment_status'] == 'SUCCESS' %}
                             <span class="badge bg-success">Success</span>
                         {% else %}
@@ -75,18 +75,12 @@
                             </button>
                         {% endif %}
                     </td>
-                    <td>
+                    <td data-code-cell>
                     {% if project['approval'] == 1 and project['payment_status'] == 'SUCCESS' %}
-                         <button class="btn btn-sm btn-outline-primary" onclick="copyCode{{ project['id'] }}()">Copy Code</button>
+                         <button class="btn btn-sm btn-outline-primary" onclick="copyCode({{ project['id'] }})">Copy Code</button>
 <textarea id="code-snippet-{{ project['id'] }}" style="display:none;">
 <script src="https://chatbot.dhgenixmedia.ae/static/chatbot-loader.js" data-user="{{ project['user_id'] }}" data-project="{{ project['id'] }}"></script>
 </textarea>
-<script>
-function copyCode{{ project['id'] }}() {
-    const code = document.getElementById("code-snippet-{{ project['id'] }}").value.trim();
-    navigator.clipboard.writeText(code).then(() => alert("Code copied to clipboard!"));
-}
-</script>
                     {% else %}
                         Unauthorized
                     {% endif %}
@@ -144,6 +138,16 @@ function copyCode{{ project['id'] }}() {
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
+function copyCode(projectId) {
+    const textarea = document.getElementById(`code-snippet-${projectId}`);
+    if (!textarea) {
+        alert("Code is not available yet.");
+        return;
+    }
+    const code = textarea.value.trim();
+    navigator.clipboard.writeText(code).then(() => alert("Code copied to clipboard!"));
+}
+
 function startPayment(projectId) {
     fetch("{{ url_for('chatbot.create_order') }}", {
         method: "POST",
@@ -183,7 +187,23 @@ function startPayment(projectId) {
                 .then(result => {
                     if (result.success) {
                         alert("Payment successful!");
-                        window.location.reload();
+                        const row = document.querySelector(`tr[data-project-id="${projectId}"]`);
+                        if (row) {
+                            const paymentCell = row.querySelector('td[data-payment-status]');
+                            const codeCell = row.querySelector('td[data-code-cell]');
+                            if (paymentCell) {
+                                paymentCell.innerHTML = '<span class="badge bg-success">Success</span>';
+                            }
+                            if (codeCell) {
+                                const userId = row.getAttribute('data-user-id');
+                                codeCell.innerHTML = `
+                                    <button class="btn btn-sm btn-outline-primary" onclick="copyCode(${projectId})">Copy Code</button>
+                                    <textarea id="code-snippet-${projectId}" style="display:none;">
+<script src="https://chatbot.dhgenixmedia.ae/static/chatbot-loader.js" data-user="${userId}" data-project="${projectId}"></script>
+</textarea>
+                                `;
+                            }
+                        }
                     } else {
                         alert(result.error || "Payment verification failed.");
                     }
