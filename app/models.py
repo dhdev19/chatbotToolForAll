@@ -257,9 +257,9 @@ class Projects:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO projects (user_id, project, popup1, popup2, popup3, popup4, payment_status)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-        ''', (self.user_id, self.project, self.popup1, self.popup2, self.popup3, self.popup4, self.payment_status))
+            INSERT INTO projects (user_id, project, approval, popup1, popup2, popup3, popup4, payment_status)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        ''', (self.user_id, self.project, self.approval, self.popup1, self.popup2, self.popup3, self.popup4, self.payment_status))
         conn.commit()
         cursor.close()
         conn.close()
