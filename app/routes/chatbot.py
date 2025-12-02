@@ -212,7 +212,16 @@ def add_project():
     btn2 = request.form.get('popup_button2')
     btn3 = request.form.get('popup_button3')
     btn4 = request.form.get('popup_button4')
-    project = Projects(user_id=session['user_id'], project=project_name, popup1=btn1, popup2=btn2, popup3=btn3, popup4=btn4)
+    # New projects are approved by default
+    project = Projects(
+        user_id=session['user_id'],
+        project=project_name,
+        popup1=btn1,
+        popup2=btn2,
+        popup3=btn3,
+        popup4=btn4,
+        approval=1,
+    )
     try:
         project.save()
         flash('Project added successfully.', 'success')
