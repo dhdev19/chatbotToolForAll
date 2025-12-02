@@ -1,11 +1,14 @@
 
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, session, flash
-from app.models import QuestionAnswer, User, Projects
+from app.models import QuestionAnswer, User, Projects, ProjectPayment
 from app.routes.auth import login_required
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
 from flask_cors import cross_origin
+import razorpay
+import hmac
+import hashlib
 
 bp = Blueprint('chatbot', __name__)
 
@@ -15,6 +18,16 @@ load_dotenv()
 # Configure Gemini with API key from environment variable
 api_key = os.getenv('GOOGLE_API_KEY')
 chatbot_api_url = os.getenv('CHATBOT_API_URL')
+
+# Razorpay configuration
+razorpay_key_id = os.getenv("RAZORPAY_KEY_ID")
+razorpay_key_secret = os.getenv("RAZORPAY_KEY_SECRET")
+razorpay_amount = int(os.getenv("PROJECT_PAYMENT_AMOUNT", "10000"))  # default 100.00 in paise
+razorpay_currency = os.getenv("PROJECT_PAYMENT_CURRENCY", "INR")
+
+razorpay_client = None
+if razorpay_key_id and razorpay_key_secret:
+    razorpay_client = razorpay.Client(auth=(razorpay_key_id, razorpay_key_secret))
 
 
 try:
@@ -37,6 +50,99 @@ try:
 except Exception as e:
     print(f"Error initializing AI model: {e}")
     chat = None
+
+
+@bp.route("/chatbot/create_order", methods=["POST"])
+@login_required
+def create_order():
+    if not razorpay_client:
+        return jsonify({"error": "Payment gateway is not configured."}), 500
+
+    data = request.get_json() or {}
+    project_id = data.get("project_id")
+
+    if not project_id:
+        return jsonify({"error": "project_id is required"}), 400
+
+    user_id = session["user_id"]
+    project_list = Projects.get_project(user_id, project_id)
+    if not project_list:
+        return jsonify({"error": "Project not found"}), 404
+
+    project = project_list[0]
+    if not project.get("approval"):
+        return jsonify({"error": "Project is not approved for payment."}), 400
+
+    try:
+        order = razorpay_client.order.create(
+            {
+                "amount": razorpay_amount,
+                "currency": razorpay_currency,
+                "payment_capture": 1,
+            }
+        )
+    except Exception as e:
+        print(f"Error creating Razorpay order: {e}")
+        return jsonify({"error": "Unable to create payment order."}), 500
+
+    return jsonify(
+        {
+            "order_id": order.get("id"),
+            "razorpay_key_id": razorpay_key_id,
+            "amount": razorpay_amount,
+            "currency": razorpay_currency,
+            "merchant_name": project.get("business_name") or "Chatbot Tool",
+            "description": f"Payment for project: {project.get('project')}",
+        }
+    )
+
+
+@bp.route("/chatbot/verify_payment", methods=["POST"])
+@login_required
+def verify_payment():
+    if not razorpay_client:
+        return jsonify({"error": "Payment gateway is not configured."}), 500
+
+    data = request.get_json() or {}
+    project_id = data.get("project_id")
+    razorpay_order_id = data.get("razorpay_order_id")
+    razorpay_payment_id = data.get("razorpay_payment_id")
+    razorpay_signature = data.get("razorpay_signature")
+
+    if not all([project_id, razorpay_order_id, razorpay_payment_id, razorpay_signature]):
+        return jsonify({"error": "Missing payment details"}), 400
+
+    user_id = session["user_id"]
+    project_list = Projects.get_project(user_id, project_id)
+    if not project_list:
+        return jsonify({"error": "Project not found"}), 404
+
+    body = f"{razorpay_order_id}|{razorpay_payment_id}"
+    expected_signature = hmac.new(
+        bytes(razorpay_key_secret, "utf-8"),
+        bytes(body, "utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+
+    if not hmac.compare_digest(expected_signature, razorpay_signature):
+        return jsonify({"error": "Invalid payment signature"}), 400
+
+    try:
+        Projects.update_payment_status(project_id, "SUCCESS")
+        ProjectPayment.log_success(
+            project_id=project_id,
+            user_id=user_id,
+            razorpay_order_id=razorpay_order_id,
+            razorpay_payment_id=razorpay_payment_id,
+            razorpay_signature=razorpay_signature,
+            amount=razorpay_amount,
+            currency=razorpay_currency,
+        )
+    except Exception as e:
+        print(f"Error updating payment status: {e}")
+        return jsonify({"error": "Payment verified but failed to update status."}), 500
+
+    return jsonify({"success": True})
 
 
 

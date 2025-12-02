@@ -46,6 +46,7 @@
                 <tr>
                     <th>Projects</th>
                     <th>Approval Status</th>
+                    <th>Payment Status</th>
                     <th>Code</th>
                     <th>Button 1</th>
                     <th>Button 2</th>
@@ -65,7 +66,17 @@
                             <span class="badge bg-danger">Pending</span>
                         {% endif %}
                     </td>
-                    <td>{% if project['approval'] == 1 %}
+                    <td>
+                        {% if project['approval'] == 1 and project['payment_status'] == 'SUCCESS' %}
+                            <span class="badge bg-success">Success</span>
+                        {% else %}
+                            <button class="btn btn-sm btn-warning" onclick="startPayment({{ project['id'] }})">
+                                Pay Now
+                            </button>
+                        {% endif %}
+                    </td>
+                    <td>
+                    {% if project['approval'] == 1 and project['payment_status'] == 'SUCCESS' %}
                          <button class="btn btn-sm btn-outline-primary" onclick="copyCode{{ project['id'] }}()">Copy Code</button>
 <textarea id="code-snippet-{{ project['id'] }}" style="display:none;">
 <script src="https://chatbot.dhgenixmedia.ae/static/chatbot-loader.js" data-user="{{ project['user_id'] }}" data-project="{{ project['id'] }}"></script>
@@ -77,13 +88,8 @@ function copyCode{{ project['id'] }}() {
 }
 </script>
                     {% else %}
-                    Unauthorized
-
+                        Unauthorized
                     {% endif %}
-                    
-                    
-                    
-                    
                     </td>
                     <td> {{ project["popup1"] }}</td>
                     <td> {{ project["popup2"] }}</td>
@@ -135,4 +141,68 @@ function copyCode{{ project['id'] }}() {
 {% block extra_js %}
 <!-- Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+function startPayment(projectId) {
+    fetch("{{ url_for('chatbot.create_order') }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ project_id: projectId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.order_id) {
+            alert(data.error || "Unable to start payment. Please try again.");
+            return;
+        }
+
+        const options = {
+            key: data.razorpay_key_id,
+            amount: data.amount,
+            currency: data.currency,
+            name: data.merchant_name || "Chatbot Tool",
+            description: data.description || "Project Payment",
+            order_id: data.order_id,
+            handler: function (response) {
+                fetch("{{ url_for('chatbot.verify_payment') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        project_id: projectId,
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature
+                    })
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        alert("Payment successful!");
+                        window.location.reload();
+                    } else {
+                        alert(result.error || "Payment verification failed.");
+                    }
+                })
+                .catch(() => {
+                    alert("Error verifying payment. Please contact support.");
+                });
+            },
+            theme: {
+                color: "#0d6efd"
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+    })
+    .catch(() => {
+        alert("Error initiating payment. Please try again.");
+    });
+}
+</script>
 {% endblock %}

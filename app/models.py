@@ -218,7 +218,7 @@ class User:
         return None
 
 class Projects:
-    def __init__(self, user_id, project, usage_count = 0, approval = 0, id=None, popup1="Location", popup2="Amenities", popup3="Configuration", popup4="Offers"):
+    def __init__(self, user_id, project, usage_count = 0, approval = 0, id=None, popup1="Location", popup2="Amenities", popup3="Configuration", popup4="Offers", payment_status="PENDING"):
         self.id = id
         self.user_id = user_id
         self.project = project
@@ -228,6 +228,8 @@ class Projects:
         self.popup2 = popup2
         self.popup3 = popup3
         self.popup4 = popup4
+        # default to PENDING; DB-level default is also set via migration
+        self.payment_status = payment_status
 
     def create_table():
         conn = get_db_connection()
@@ -243,6 +245,7 @@ class Projects:
                 popup2 TEXT DEFAULT 'Amenities',
                 popup3 TEXT DEFAULT 'Configuration',
                 popup4 TEXT DEFAULT 'Offers',
+                payment_status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             )
         ''')
@@ -254,9 +257,9 @@ class Projects:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO projects (user_id, project, popup1, popup2, popup3, popup4)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        ''', (self.user_id, self.project, self.popup1, self.popup2, self.popup3, self.popup4))
+            INSERT INTO projects (user_id, project, popup1, popup2, popup3, popup4, payment_status)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        ''', (self.user_id, self.project, self.popup1, self.popup2, self.popup3, self.popup4, self.payment_status))
         conn.commit()
         cursor.close()
         conn.close()
@@ -320,6 +323,123 @@ class Projects:
         conn.commit()
         cursor.close()
         conn.close()
+
+    @staticmethod
+    def update_payment_status(project_id, status):
+        """
+        Update the payment_status for a project.
+        Expected status values: 'PENDING', 'SUCCESS', 'FAILED', etc.
+        """
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('UPDATE projects SET payment_status = %s WHERE id = %s', (status, project_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+
+class ProjectPayment:
+    def __init__(
+        self,
+        project_id,
+        user_id,
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+        amount,
+        currency,
+        status="SUCCESS",
+        id=None,
+    ):
+        self.id = id
+        self.project_id = project_id
+        self.user_id = user_id
+        self.razorpay_order_id = razorpay_order_id
+        self.razorpay_payment_id = razorpay_payment_id
+        self.razorpay_signature = razorpay_signature
+        self.amount = amount
+        self.currency = currency
+        self.status = status
+
+    @staticmethod
+    def create_table():
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            '''
+            CREATE TABLE IF NOT EXISTS project_payments (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                project_id INT NOT NULL,
+                user_id INT NOT NULL,
+                razorpay_order_id VARCHAR(191) NOT NULL,
+                razorpay_payment_id VARCHAR(191) NOT NULL,
+                razorpay_signature VARCHAR(255) NOT NULL,
+                amount INT NOT NULL,
+                currency VARCHAR(10) NOT NULL,
+                status VARCHAR(20) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+        '''
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+    def save(self):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            '''
+            INSERT INTO project_payments (
+                project_id,
+                user_id,
+                razorpay_order_id,
+                razorpay_payment_id,
+                razorpay_signature,
+                amount,
+                currency,
+                status
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        ''',
+            (
+                self.project_id,
+                self.user_id,
+                self.razorpay_order_id,
+                self.razorpay_payment_id,
+                self.razorpay_signature,
+                self.amount,
+                self.currency,
+                self.status,
+            ),
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+    @staticmethod
+    def log_success(
+        project_id,
+        user_id,
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+        amount,
+        currency,
+    ):
+        payment = ProjectPayment(
+            project_id=project_id,
+            user_id=user_id,
+            razorpay_order_id=razorpay_order_id,
+            razorpay_payment_id=razorpay_payment_id,
+            razorpay_signature=razorpay_signature,
+            amount=amount,
+            currency=currency,
+            status="SUCCESS",
+        )
+        payment.save()
 
 
 
