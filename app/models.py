@@ -22,7 +22,7 @@ def get_db_connection():
 
 
 class User:
-    def __init__(self, full_name, email, password_hash, whatsapp_number, business_name, WelcomeMessage, secret_key=None, is_admin=False, id=None, offers='Special Offer: Contact us!', popup_text='Chat with us directly and we can help you with your needs.', whatsapp_message='I want to know more about your projects'):
+    def __init__(self, full_name, email, password_hash, whatsapp_number, business_name, WelcomeMessage, secret_key=None, is_admin=False, id=None, offers='Alv', popup_text='Chat with us directly and we can help you with your needs.', whatsapp_message='I want to know more about your projects'):
         self.id = id
         self.full_name = full_name
         self.email = email
