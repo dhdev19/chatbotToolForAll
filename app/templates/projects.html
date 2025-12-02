@@ -196,12 +196,14 @@ function startPayment(projectId) {
                             }
                             if (codeCell) {
                                 const userId = row.getAttribute('data-user-id');
-                                codeCell.innerHTML = `
-                                    <button class="btn btn-sm btn-outline-primary" onclick="copyCode(${projectId})">Copy Code</button>
-                                    <textarea id="code-snippet-${projectId}" style="display:none;">
-<script src="https://chatbot.dhgenixmedia.ae/static/chatbot-loader.js" data-user="${userId}" data-project="${projectId}"></script>
-</textarea>
-                                `;
+                                // Avoid literal </script> inside this script block to prevent breaking the page
+                                const embedScriptOpen = '<script src="https://chatbot.dhgenixmedia.ae/static/chatbot-loader.js"';
+                                const embedScriptClose = '</scr' + 'ipt>';
+                                codeCell.innerHTML = ''
+                                    + `<button class="btn btn-sm btn-outline-primary" onclick="copyCode(${projectId})">Copy Code</button>`
+                                    + `<textarea id="code-snippet-${projectId}" style="display:none;">\n`
+                                    + `${embedScriptOpen} data-user="${userId}" data-project="${projectId}"></scr` + `ipt>\n`
+                                    + `</textarea>`;
                             }
                         }
                     } else {
